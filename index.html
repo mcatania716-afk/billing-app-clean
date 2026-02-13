@@ -2,54 +2,68 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Tabs3 Time Capture</title>
 <style>
-  body { font-family: -apple-system, system-ui, Segoe UI, Roboto, sans-serif; margin:0; background:#f4f6fb; color:#111; }
-  header { padding:14px 16px; background:#153a77; color:#fff; position:sticky; top:0; z-index:10; }
-  header .row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-  header h1 { font-size:16px; margin:0; font-weight:700; }
-  header .pill { font-size:12px; background:rgba(255,255,255,.18); padding:6px 10px; border-radius:999px; }
-  main { padding:14px 16px 120px; max-width:900px; margin:0 auto; }
-  .card { background:#fff; border-radius:12px; padding:14px; box-shadow:0 2px 10px rgba(15,25,40,.06); margin-bottom:12px; }
-  .grid { display:grid; grid-template-columns: 1fr; gap:10px; }
-  @media(min-width:760px){ .grid.two{ grid-template-columns: 1fr 1fr; } .grid.three{ grid-template-columns: 1fr 1fr 1fr; } }
-  label { font-size:12px; font-weight:700; color:#334; display:block; margin-bottom:6px; }
-  input, textarea, select, button { width:100%; font-size:16px; padding:12px; border-radius:10px; border:1px solid #d7ddea; outline:none; box-sizing:border-box; }
-  textarea { min-height:84px; resize:vertical; }
-  input:focus, textarea:focus { border-color:#153a77; box-shadow:0 0 0 3px rgba(21,58,119,.12); }
-  .btn { background:#153a77; color:#fff; border:none; font-weight:800; }
-  .btn.secondary { background:#eef2ff; color:#153a77; border:1px solid #d6ddff; }
-  .btn.danger { background:#b42318; }
-  .row { display:flex; gap:10px; flex-wrap:wrap; }
-  .row > * { flex:1; }
-  .small { font-size:12px; color:#556; }
-  .muted { color:#667; }
-  .divider { height:1px; background:#eef0f6; margin:10px 0; }
+  :root { --bg:#f4f6fb; --card:#fff; --ink:#101423; --muted:#5f6a7d; --brand:#153a77; --line:#e5eaf6; --soft:#f7f9ff; --danger:#b42318; }
+  body{ margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+  header{ position:sticky; top:0; z-index:50; background:var(--brand); color:#fff; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,.16); }
+  header .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:16px; font-weight:800; letter-spacing:.2px; }
+  header .pill{ font-size:12px; background:rgba(255,255,255,.18); padding:6px 10px; border-radius:999px; }
+  header .pill b{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+  main{ max-width:980px; margin:0 auto; padding:14px 16px 120px; }
+  .card{ background:var(--card); border-radius:14px; padding:14px; box-shadow:0 2px 12px rgba(15,25,40,.06); margin-bottom:12px; border:1px solid rgba(229,234,246,.7); }
+  .grid{ display:grid; grid-template-columns:1fr; gap:10px; }
+  @media(min-width:820px){ .grid.two{ grid-template-columns:1fr 1fr; } .grid.three{ grid-template-columns:1fr 1fr 1fr; } }
+  label{ display:block; font-size:12px; font-weight:900; color:#2a3550; margin-bottom:6px; }
+  input, textarea, select, button{
+    width:100%; box-sizing:border-box; font-size:16px; padding:12px; border-radius:12px; border:1px solid #d7deee;
+    outline:none; background:#fff;
+  }
+  textarea{ min-height:92px; resize:vertical; }
+  input:focus, textarea:focus, select:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(21,58,119,.14); }
+  .row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .row > *{ flex:1; min-width:140px; }
+  .btn{ background:var(--brand); color:#fff; border:none; font-weight:900; }
+  .btn.secondary{ background:var(--soft); color:var(--brand); border:1px solid #d6ddff; }
+  .btn.danger{ background:var(--danger); color:#fff; border:none; }
+  .small{ font-size:12px; color:var(--muted); line-height:1.35; }
+  .divider{ height:1px; background:#eef1f8; margin:10px 0; }
+  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
 
-  /* Search dropdown */
-  .searchWrap { position:relative; }
-  .dropdown { position:absolute; left:0; right:0; top:calc(100% + 6px); background:#fff; border:1px solid #d7ddea; border-radius:12px; overflow:hidden; box-shadow:0 8px 24px rgba(20,30,50,.14); display:none; max-height:320px; overflow:auto; z-index:50; }
-  .opt { padding:10px 12px; border-bottom:1px solid #f0f2f8; cursor:pointer; }
+  /* Search */
+  .searchWrap{ position:relative; }
+  .dropdown{
+    position:absolute; left:0; right:0; top:calc(100% + 8px);
+    background:#fff; border:1px solid #d7deee; border-radius:14px; overflow:hidden;
+    box-shadow:0 14px 36px rgba(20,30,55,.18);
+    display:none; max-height:340px; overflow:auto; z-index:100;
+  }
+  .opt{ padding:10px 12px; border-bottom:1px solid #f0f2f8; cursor:pointer; }
   .opt:last-child{ border-bottom:none; }
-  .opt:hover { background:#f3f6ff; }
-  .opt .top { font-weight:800; font-size:14px; }
-  .opt .mid { font-size:13px; color:#334; margin-top:2px; }
-  .opt .bot { font-size:12px; color:#667; margin-top:2px; display:flex; justify-content:space-between; gap:10px; }
-  .k { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; background:#f4f6fb; padding:2px 6px; border-radius:6px; border:1px solid #e5e9f5; }
+  .opt:hover{ background:#f2f6ff; }
+  .opt .top{ font-weight:900; font-size:14px; }
+  .opt .mid{ font-size:13px; color:#28324a; margin-top:3px; }
+  .opt .bot{ margin-top:4px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; color:#667; }
+  .chip{ font-size:12px; border:1px solid var(--line); background:var(--soft); padding:3px 8px; border-radius:999px; }
 
-  /* Entries list */
-  .entry { border:1px solid #e6eaf6; border-radius:12px; padding:12px; margin-top:10px; }
-  .entry .meta { display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between; }
-  .entry .meta .left { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
-  .badge { font-size:12px; border:1px solid #e1e6f7; padding:4px 8px; border-radius:999px; background:#f7f9ff; }
-  .entry .desc { margin-top:8px; white-space:pre-wrap; }
-  .entry .actions { margin-top:10px; display:flex; gap:8px; }
-  .entry .actions button { padding:10px; font-size:14px; border-radius:10px; }
+  /* Entries */
+  .entry{ border:1px solid var(--line); background:#fff; border-radius:14px; padding:12px; margin-top:10px; }
+  .entry .meta{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .badge{ font-size:12px; border:1px solid var(--line); background:var(--soft); padding:4px 8px; border-radius:999px; }
+  .entry .desc{ margin-top:8px; white-space:pre-wrap; }
+  .entry .actions{ margin-top:10px; display:flex; gap:8px; }
+  .entry .actions button{ padding:10px; font-size:14px; border-radius:12px; }
 
-  /* Sticky footer */
-  footer { position:fixed; left:0; right:0; bottom:0; background:rgba(244,246,251,.92); backdrop-filter: blur(10px); border-top:1px solid #e8ecf8; }
-  footer .wrap { max-width:900px; margin:0 auto; padding:10px 16px; display:flex; gap:10px; }
+  footer{
+    position:fixed; left:0; right:0; bottom:0;
+    background:rgba(244,246,251,.92); backdrop-filter:blur(10px);
+    border-top:1px solid #e8ecf8;
+  }
+  footer .wrap{ max-width:980px; margin:0 auto; padding:10px 16px; display:flex; gap:10px; }
+  footer .wrap button{ border-radius:14px; }
 </style>
 </head>
 <body>
@@ -57,29 +71,45 @@
 <header>
   <div class="row">
     <h1>Tabs3 Time Capture</h1>
-    <div class="pill">Timekeeper: <span id="tkPill">70</span></div>
+    <div class="pill">TK <b id="tkPill">70</b> · <span id="countsPill">0 today</span> · <span id="hoursPill">0.0 hrs</span></div>
   </div>
 </header>
 
 <main>
 
   <div class="card">
-    <div class="grid two">
+    <div class="grid three">
       <div>
         <label>Import Client/Matter CSV</label>
         <input id="csvFile" type="file" accept=".csv,text/csv" />
-        <div class="small muted" style="margin-top:6px;">
-          Expected columns (flexible): <span class="k">Client ID</span> (full like 11015.0001), <span class="k">Client Name</span>, <span class="k">Matter</span>
+        <div class="small" style="margin-top:6px;">
+          Needs a full Tabs3 ID like <span class="mono">11015.0001</span> plus client name + matter description.
+          Column names can be “Client ID / Client Name / Matter” (flexible).
         </div>
       </div>
+
       <div>
         <label>Settings</label>
         <div class="row">
           <input id="timekeeper" inputmode="numeric" placeholder="Timekeeper (default 70)" />
           <button class="btn secondary" id="saveSettings">Save</button>
         </div>
-        <div class="small muted" style="margin-top:6px;">
-          Timekeeper always appears in export. If blank, app uses <b>70</b>.
+        <div class="small" style="margin-top:6px;">
+          Timekeeper is always included in export. If blank, it exports <b>70</b>.
+        </div>
+      </div>
+
+      <div>
+        <label>Backup / Restore</label>
+        <div class="row">
+          <button class="btn secondary" id="backupBtn">Download Backup</button>
+          <label class="btn secondary" style="display:flex; align-items:center; justify-content:center; cursor:pointer; margin:0;">
+            Restore
+            <input id="restoreFile" type="file" accept=".json,application/json" style="display:none;">
+          </label>
+        </div>
+        <div class="small" style="margin-top:6px;">
+          Backup is a JSON file containing matters, entries, recents, favorites, settings.
         </div>
       </div>
     </div>
@@ -90,12 +120,10 @@
       <div>
         <label>Recents</label>
         <select id="recents"></select>
-        <div class="small muted" style="margin-top:6px;">Tap a recent to re-select instantly.</div>
       </div>
       <div>
         <label>Favorites</label>
         <select id="favorites"></select>
-        <div class="small muted" style="margin-top:6px;">Add favorites from the selected matter.</div>
       </div>
     </div>
   </div>
@@ -111,16 +139,18 @@
         autocapitalize="none"
         autocorrect="off"
         spellcheck="false"
-        placeholder='Dictate/type… e.g., "Gamma TSX" or "11015" or "PMG"'
+        placeholder='Dictate/type… e.g., “Gamma TSX” or “11015” or “PMG”'
       />
       <div id="dropdown" class="dropdown"></div>
     </div>
 
     <div style="margin-top:10px;">
-      <div class="small muted">Selected:</div>
-      <div id="selectedLine" style="font-weight:800; margin-top:4px;">None</div>
+      <div class="small">Selected:</div>
+      <div id="selectedLine" style="font-weight:900; margin-top:4px;">None (import matters first)</div>
       <input type="hidden" id="selectedFullId" />
+
       <div class="row" style="margin-top:10px;">
+        <button class="btn secondary" id="focusDesc">Focus Description (dictate)</button>
         <button class="btn secondary" id="addFav">Add to Favorites</button>
         <button class="btn secondary" id="clearSel">Clear Selection</button>
       </div>
@@ -133,12 +163,13 @@
         <label>Description</label>
         <textarea id="desc" placeholder="Dictate work description here…"></textarea>
       </div>
+
       <div class="grid">
-        <div>
-          <label>Hours</label>
-          <input id="hours" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 0.3" />
-        </div>
-        <div class="grid two">
+        <div class="grid three">
+          <div>
+            <label>Hours</label>
+            <input id="hours" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 0.3" />
+          </div>
           <div>
             <label>Date</label>
             <input id="workDate" type="date" />
@@ -148,11 +179,14 @@
             <button class="btn secondary" id="addPoint1">+0.1</button>
           </div>
         </div>
-        <div>
+
+        <div class="row">
           <button class="btn" id="addEntry">Add Entry</button>
-          <div class="small muted" style="margin-top:8px;">
-            Tip: Tap the description box and use iPhone dictation. The matter box is for search + selection.
-          </div>
+          <button class="btn secondary" id="dupYesterday">Duplicate Yesterday → Today</button>
+        </div>
+
+        <div class="small">
+          Tip: Pick the matter first, then dictate the description. “Duplicate yesterday” is great for recurring admin/billing blocks.
         </div>
       </div>
     </div>
@@ -161,75 +195,148 @@
   <div class="card">
     <div class="grid three">
       <div>
-        <label>Daily Review</label>
+        <label>Daily Review Date</label>
         <input id="reviewDate" type="date" />
-        <div class="small muted" style="margin-top:6px;">Shows entries for that date only.</div>
+        <div class="small" style="margin-top:6px;">Edits/deletes apply only to this date.</div>
       </div>
       <div>
-        <label>Total Hours (review date)</label>
+        <label>Daily Total</label>
         <input id="totalHours" readonly />
+        <div class="small" style="margin-top:6px;">Entries: <span id="totalEntries">0</span></div>
       </div>
       <div>
-        <label>Data</label>
-        <button class="btn secondary" id="clearAll">Clear All Entries</button>
+        <label>Weekly Total (Mon–Sun)</label>
+        <input id="weekHours" readonly />
+        <div class="small" style="margin-top:6px;"><span id="weekRange">—</span></div>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="grid two">
+      <div>
+        <label>Export Format</label>
+        <select id="exportPreset">
+          <option value="simple">Simple: Date,Timekeeper,Matter,Hours,Description</option>
+          <option value="tabs3like">Tabs3-like: Date,Timekeeper,ClientMatterID,Hours,Narrative</option>
+          <option value="custom">Custom Header Line (edit below)</option>
+        </select>
+      </div>
+      <div>
+        <label>Custom Header Line (only used if Custom)</label>
+        <input id="customHeader" placeholder='e.g., Date,Timekeeper,Matter,Hours,Description' />
+        <div class="small" style="margin-top:6px;">Custom export uses the same 5 fields in that order.</div>
       </div>
     </div>
 
     <div id="entriesList"></div>
+
+    <div class="divider"></div>
+
+    <div class="row">
+      <button class="btn danger" id="clearAll">Clear ALL entries</button>
+    </div>
   </div>
 
 </main>
 
 <footer>
   <div class="wrap">
-    <button class="btn" id="exportCsv">Export Tabs3 CSV</button>
-    <button class="btn secondary" id="exportRange">Export Date Range</button>
+    <button class="btn" id="exportDay">Export Today</button>
+    <button class="btn secondary" id="exportReview">Export Review Date</button>
+    <button class="btn secondary" id="exportRangeBtn">Export Date Range</button>
   </div>
 </footer>
 
 <script>
 /* -----------------------------
-   Storage helpers
+   Storage keys
 --------------------------------*/
 const LS = {
-  matters: "tabs3_matters_v1",
-  settings: "tabs3_settings_v1",
-  entries: "tabs3_entries_v1",
-  recents: "tabs3_recents_v1",
-  favorites: "tabs3_favorites_v1",
+  matters: "tabs3_matters_v2",
+  settings: "tabs3_settings_v2",
+  entries: "tabs3_entries_v2",
+  recents: "tabs3_recents_v2",
+  favorites: "tabs3_favorites_v2",
 };
 
+/* -----------------------------
+   Helpers
+--------------------------------*/
 function loadJSON(key, fallback) {
   try { return JSON.parse(localStorage.getItem(key) || "") ?? fallback; }
   catch { return fallback; }
 }
-function saveJSON(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+
+function todayISO() {
+  const d = new Date();
+  const tzOff = d.getTimezoneOffset() * 60000;
+  return new Date(d - tzOff).toISOString().slice(0,10);
+}
+function normalize(s) {
+  return (s || "")
+    .toLowerCase()
+    .replace(/[^\w\s.\-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+function escapeHTML(str) {
+  return (str ?? "").toString()
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function csvQuote(s) {
+  const t = (s ?? "").toString().replace(/"/g, '""');
+  return `"${t}"`;
+}
+function cryptoId() {
+  return (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
+}
+function mondayOf(dateISO) {
+  const d = new Date(dateISO + "T12:00:00");
+  const day = d.getDay(); // 0 Sun, 1 Mon...
+  const diff = (day === 0 ? -6 : 1 - day);
+  d.setDate(d.getDate() + diff);
+  return d;
+}
+function isoFromDate(d) {
+  const tzOff = d.getTimezoneOffset() * 60000;
+  return new Date(d - tzOff).toISOString().slice(0,10);
 }
 
 /* -----------------------------
    State
 --------------------------------*/
-let matters = loadJSON(LS.matters, []);   // imported lookup list
-let entries = loadJSON(LS.entries, []);   // time entries
-let recents = loadJSON(LS.recents, []);   // full_id list
-let favorites = loadJSON(LS.favorites, []); // full_id list
+let matters = loadJSON(LS.matters, []);
+let entries = loadJSON(LS.entries, []);
+let recents = loadJSON(LS.recents, []);
+let favorites = loadJSON(LS.favorites, []);
 let settings = loadJSON(LS.settings, { timekeeper: "70" });
 
 /* -----------------------------
    DOM
 --------------------------------*/
 const tkPill = document.getElementById("tkPill");
-const timekeeper = document.getElementById("timekeeper");
-const saveSettingsBtn = document.getElementById("saveSettings");
+const countsPill = document.getElementById("countsPill");
+const hoursPill = document.getElementById("hoursPill");
 
 const csvFile = document.getElementById("csvFile");
+const restoreFile = document.getElementById("restoreFile");
+const backupBtn = document.getElementById("backupBtn");
+
+const timekeeper = document.getElementById("timekeeper");
+const saveSettingsBtn = document.getElementById("saveSettings");
 
 const matterSearch = document.getElementById("matterSearch");
 const dropdown = document.getElementById("dropdown");
 const selectedLine = document.getElementById("selectedLine");
 const selectedFullId = document.getElementById("selectedFullId");
 
+const focusDesc = document.getElementById("focusDesc");
 const addFav = document.getElementById("addFav");
 const clearSel = document.getElementById("clearSel");
 
@@ -238,199 +345,35 @@ const hours = document.getElementById("hours");
 const workDate = document.getElementById("workDate");
 const addPoint1 = document.getElementById("addPoint1");
 const addEntryBtn = document.getElementById("addEntry");
+const dupYesterdayBtn = document.getElementById("dupYesterday");
 
 const reviewDate = document.getElementById("reviewDate");
-const entriesList = document.getElementById("entriesList");
 const totalHours = document.getElementById("totalHours");
+const totalEntries = document.getElementById("totalEntries");
+const weekHours = document.getElementById("weekHours");
+const weekRange = document.getElementById("weekRange");
+const entriesList = document.getElementById("entriesList");
 const clearAll = document.getElementById("clearAll");
 
-const exportCsvBtn = document.getElementById("exportCsv");
-const exportRangeBtn = document.getElementById("exportRange");
+const exportDay = document.getElementById("exportDay");
+const exportReview = document.getElementById("exportReview");
+const exportRangeBtn = document.getElementById("exportRangeBtn");
+
+const exportPreset = document.getElementById("exportPreset");
+const customHeader = document.getElementById("customHeader");
 
 const recentsSelect = document.getElementById("recents");
 const favoritesSelect = document.getElementById("favorites");
 
 /* -----------------------------
-   Init defaults
+   Timekeeper handling (always present)
 --------------------------------*/
-function todayISO() {
-  const d = new Date();
-  const tzOff = d.getTimezoneOffset() * 60000;
-  return new Date(d - tzOff).toISOString().slice(0,10);
-}
-workDate.value = todayISO();
-reviewDate.value = todayISO();
-
-function normalize(s) {
-  return (s || "")
-    .toLowerCase()
-    .replace(/[^\w\s.\-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
 function safeTK() {
   const raw = (settings.timekeeper || "").toString().trim();
   if (!raw) return "70";
-  // If user typed "MEC-70", extract digits
   const m = raw.match(/(\d+)/);
   return (m && m[1]) ? m[1] : "70";
 }
-
-/* -----------------------------
-   Matter index + search
---------------------------------*/
-function buildSearchText(m) {
-  const base = `${m.full_id} ${m.client_name} ${m.matter_desc}`;
-  return normalize((m.search_text && m.search_text.trim()) ? m.search_text : base);
-}
-
-function scoreMatch(q, m) {
-  // Simple ranking: exact id prefix > contains > token matches
-  const st = buildSearchText(m);
-  if (m.full_id.startsWith(q)) return 1000;
-  if (st.includes(q)) return 500;
-  const tokens = q.split(" ");
-  let t = 0;
-  for (const tok of tokens) if (tok && st.includes(tok)) t += 30;
-  return t;
-}
-
-let debounceTimer = null;
-matterSearch.addEventListener("input", () => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => runSearch(), 120);
-});
-
-function runSearch() {
-  const q = normalize(matterSearch.value);
-  if (q.length < 2 || matters.length === 0) {
-    dropdown.style.display = "none";
-    dropdown.innerHTML = "";
-    return;
-  }
-  const hits = matters
-    .map(m => ({ m, s: scoreMatch(q, m) }))
-    .filter(x => x.s > 0)
-    .sort((a,b) => b.s - a.s)
-    .slice(0, 12)
-    .map(x => x.m);
-
-  renderDropdown(hits);
-}
-
-function renderDropdown(list) {
-  dropdown.innerHTML = "";
-  if (!list.length) { dropdown.style.display = "none"; return; }
-
-  for (const m of list) {
-    const div = document.createElement("div");
-    div.className = "opt";
-    div.innerHTML = `
-      <div class="top">${escapeHTML(m.client_name || "—")}</div>
-      <div class="mid">${escapeHTML(m.matter_desc || "—")}</div>
-      <div class="bot">
-        <span class="k">${escapeHTML(m.full_id)}</span>
-        <span class="muted">${escapeHTML((m.client_id||"") + (m.matter_id?("." + m.matter_id):""))}</span>
-      </div>
-    `;
-    div.addEventListener("mousedown", (e) => { e.preventDefault(); selectMatter(m); });
-    div.addEventListener("click", () => selectMatter(m));
-    dropdown.appendChild(div);
-  }
-  dropdown.style.display = "block";
-}
-
-function selectMatter(m) {
-  selectedFullId.value = m.full_id;
-  selectedLine.textContent = `${m.full_id} — ${m.client_name} — ${m.matter_desc}`;
-  dropdown.style.display = "none";
-  dropdown.innerHTML = "";
-  matterSearch.value = "";
-  matterSearch.blur();
-
-  // add to recents
-  recents = [m.full_id, ...recents.filter(x => x !== m.full_id)].slice(0, 15);
-  saveJSON(LS.recents, recents);
-  renderRecentsAndFavorites();
-}
-
-function clearSelection() {
-  selectedFullId.value = "";
-  selectedLine.textContent = "None";
-}
-clearSel.addEventListener("click", clearSelection);
-
-document.addEventListener("click", (e) => {
-  if (!dropdown.contains(e.target) && e.target !== matterSearch) {
-    dropdown.style.display = "none";
-  }
-});
-
-/* -----------------------------
-   Recents / Favorites UI
---------------------------------*/
-function fullIdToLabel(fullId) {
-  const m = matters.find(x => x.full_id === fullId);
-  if (!m) return fullId;
-  return `${m.full_id} — ${m.client_name} — ${m.matter_desc}`;
-}
-
-function renderRecentsAndFavorites() {
-  recentsSelect.innerHTML = "";
-  favoritesSelect.innerHTML = "";
-
-  const recOpt0 = document.createElement("option");
-  recOpt0.value = "";
-  recOpt0.textContent = matters.length ? "Select a recent…" : "Import matters first…";
-  recentsSelect.appendChild(recOpt0);
-
-  for (const id of recents) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = fullIdToLabel(id);
-    recentsSelect.appendChild(o);
-  }
-
-  const favOpt0 = document.createElement("option");
-  favOpt0.value = "";
-  favOpt0.textContent = favorites.length ? "Select a favorite…" : "No favorites yet";
-  favoritesSelect.appendChild(favOpt0);
-
-  for (const id of favorites) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = fullIdToLabel(id);
-    favoritesSelect.appendChild(o);
-  }
-}
-
-recentsSelect.addEventListener("change", () => {
-  const id = recentsSelect.value;
-  if (!id) return;
-  const m = matters.find(x => x.full_id === id);
-  if (m) selectMatter(m);
-  recentsSelect.value = "";
-});
-
-favoritesSelect.addEventListener("change", () => {
-  const id = favoritesSelect.value;
-  if (!id) return;
-  const m = matters.find(x => x.full_id === id);
-  if (m) selectMatter(m);
-  favoritesSelect.value = "";
-});
-
-addFav.addEventListener("click", () => {
-  const id = selectedFullId.value;
-  if (!id) return alert("Select a matter first.");
-  favorites = [id, ...favorites.filter(x => x !== id)].slice(0, 30);
-  saveJSON(LS.favorites, favorites);
-  renderRecentsAndFavorites();
-});
-
-/* -----------------------------
-   Settings
---------------------------------*/
 function renderSettings() {
   const tk = safeTK();
   tkPill.textContent = tk;
@@ -443,149 +386,268 @@ saveSettingsBtn.addEventListener("click", () => {
 });
 
 /* -----------------------------
-   CSV Import
+   Auto date rollover
 --------------------------------*/
-csvFile.addEventListener("change", async () => {
-  const file = csvFile.files && csvFile.files[0];
-  if (!file) return;
+function initDates() {
+  const t = todayISO();
+  workDate.value = workDate.value || t;
+  reviewDate.value = reviewDate.value || t;
+}
+function dateRolloverTick() {
+  const t = todayISO();
+  if (!workDate.value) workDate.value = t;
+  if (!reviewDate.value) reviewDate.value = t;
 
-  const text = await file.text();
-  const parsed = parseCSV(text);
-  if (!parsed.rows.length) return alert("Could not read CSV rows.");
+  // If user is still on yesterday, gently roll to today (only if they haven't explicitly set a different date)
+  if (workDate.value < t) workDate.value = t;
+  // For review date, leave it alone unless it was today/yesterday rollover and no entries exist for that date
+  // (keep conservative: don't change reviewDate automatically)
+}
+setInterval(dateRolloverTick, 60_000);
 
-  // header normalization
-  const headers = parsed.headers.map(h => normalize(h));
-  const idx = (names) => {
-    for (const n of names) {
-      const i = headers.indexOf(normalize(n));
-      if (i >= 0) return i;
-    }
-    return -1;
-  };
+/* -----------------------------
+   Matters: search indexing + ranking
+--------------------------------*/
+function buildSearchText(m) {
+  const base = `${m.full_id} ${m.client_id || ""} ${m.matter_id || ""} ${m.client_name || ""} ${m.matter_desc || ""}`;
+  const st = (m.search_text && m.search_text.trim()) ? m.search_text : base;
+  return normalize(st);
+}
+function scoreMatch(q, m) {
+  const st = buildSearchText(m);
+  if (!q) return 0;
 
-  const idI = idx(["client id", "clientid", "id", "matter id", "matterid", "tabs3 id"]);
-  const clientNameI = idx(["client name", "client", "clientname"]);
-  const matterDescI = idx(["matter", "matter description", "description", "matterdesc", "matter desc"]);
+  // Strongest: exact/prefix ID match
+  if (m.full_id && m.full_id.startsWith(q)) return 2000;
 
-  if (idI < 0) {
-    return alert('CSV must contain a "Client ID" column with full Tabs3 IDs like 11015.0001.');
+  // Next: prefix match on client name / matter desc tokens
+  const client = normalize(m.client_name || "");
+  const matter = normalize(m.matter_desc || "");
+  if (client.startsWith(q)) return 1200;
+  if (matter.startsWith(q)) return 1100;
+
+  // Contains match
+  if (st.includes(q)) return 700;
+
+  // Token scoring
+  const toks = q.split(" ").filter(Boolean);
+  let s = 0;
+  for (const t of toks) {
+    if (t.length < 2) continue;
+    if (m.full_id && m.full_id.includes(t)) s += 120;
+    if (client.includes(t)) s += 90;
+    if (matter.includes(t)) s += 80;
+    if (st.includes(t)) s += 40;
+  }
+  return s;
+}
+
+let debounceTimer = null;
+matterSearch.addEventListener("input", () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(runSearch, 120);
+});
+function runSearch() {
+  const q = normalize(matterSearch.value);
+  if (q.length < 2 || matters.length === 0) {
+    dropdown.style.display = "none";
+    dropdown.innerHTML = "";
+    return;
   }
 
-  const newMatters = [];
-  for (const r of parsed.rows) {
-    const full_id = (r[idI] || "").trim();
-    if (!full_id || !full_id.includes(".")) continue;
+  const hits = matters
+    .map(m => ({ m, s: scoreMatch(q, m) }))
+    .filter(x => x.s > 0)
+    .sort((a,b) => b.s - a.s)
+    .slice(0, 12)
+    .map(x => x.m);
 
-    const parts = full_id.split(".");
-    const client_id = parts[0] || "";
-    const matter_id = parts[1] || "";
+  renderDropdown(hits);
+}
+function renderDropdown(list) {
+  dropdown.innerHTML = "";
+  if (!list.length) { dropdown.style.display = "none"; return; }
 
-    const client_name = clientNameI >= 0 ? (r[clientNameI] || "").trim() : "";
-    const matter_desc = matterDescI >= 0 ? (r[matterDescI] || "").trim() : "";
-
-    const search_text = normalize(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`);
-    newMatters.push({ full_id, client_id, matter_id, client_name, matter_desc, search_text });
+  for (const m of list) {
+    const div = document.createElement("div");
+    div.className = "opt";
+    div.innerHTML = `
+      <div class="top">${escapeHTML(m.client_name || "—")}</div>
+      <div class="mid">${escapeHTML(m.matter_desc || "—")}</div>
+      <div class="bot">
+        <span class="chip mono">${escapeHTML(m.full_id)}</span>
+        <span>${escapeHTML((m.client_id || "") + (m.matter_id ? ("." + m.matter_id) : ""))}</span>
+      </div>
+    `;
+    div.addEventListener("mousedown", (e) => { e.preventDefault(); selectMatter(m); });
+    div.addEventListener("click", () => selectMatter(m));
+    dropdown.appendChild(div);
   }
+  dropdown.style.display = "block";
+}
+function selectMatter(m) {
+  selectedFullId.value = m.full_id;
+  selectedLine.textContent = `${m.full_id} — ${m.client_name || ""} — ${m.matter_desc || ""}`;
+  dropdown.style.display = "none";
+  dropdown.innerHTML = "";
+  matterSearch.value = "";
 
-  if (!newMatters.length) return alert("No valid rows found (need full IDs like 11015.0001).");
-
-  matters = newMatters;
-  saveJSON(LS.matters, matters);
+  // recents
+  recents = [m.full_id, ...recents.filter(x => x !== m.full_id)].slice(0, 18);
+  saveJSON(LS.recents, recents);
   renderRecentsAndFavorites();
-  alert(`Imported ${matters.length} matters.`);
+}
+function clearSelection() {
+  selectedFullId.value = "";
+  selectedLine.textContent = matters.length ? "None" : "None (import matters first)";
+}
+clearSel.addEventListener("click", clearSelection);
+
+document.addEventListener("click", (e) => {
+  if (!dropdown.contains(e.target) && e.target !== matterSearch) dropdown.style.display = "none";
+});
+
+/* -----------------------------
+   Recents / Favorites
+--------------------------------*/
+function fullIdToLabel(fullId) {
+  const m = matters.find(x => x.full_id === fullId);
+  if (!m) return fullId;
+  return `${m.full_id} — ${m.client_name || ""} — ${m.matter_desc || ""}`;
+}
+function renderRecentsAndFavorites() {
+  recentsSelect.innerHTML = "";
+  favoritesSelect.innerHTML = "";
+
+  const r0 = document.createElement("option");
+  r0.value = "";
+  r0.textContent = matters.length ? "Select a recent…" : "Import matters first…";
+  recentsSelect.appendChild(r0);
+  for (const id of recents) {
+    const o = document.createElement("option");
+    o.value = id;
+    o.textContent = fullIdToLabel(id);
+    recentsSelect.appendChild(o);
+  }
+
+  const f0 = document.createElement("option");
+  f0.value = "";
+  f0.textContent = favorites.length ? "Select a favorite…" : "No favorites yet";
+  favoritesSelect.appendChild(f0);
+  for (const id of favorites) {
+    const o = document.createElement("option");
+    o.value = id;
+    o.textContent = fullIdToLabel(id);
+    favoritesSelect.appendChild(o);
+  }
+}
+recentsSelect.addEventListener("change", () => {
+  const id = recentsSelect.value;
+  if (!id) return;
+  const m = matters.find(x => x.full_id === id);
+  if (m) selectMatter(m);
+  recentsSelect.value = "";
+});
+favoritesSelect.addEventListener("change", () => {
+  const id = favoritesSelect.value;
+  if (!id) return;
+  const m = matters.find(x => x.full_id === id);
+  if (m) selectMatter(m);
+  favoritesSelect.value = "";
+});
+addFav.addEventListener("click", () => {
+  const id = selectedFullId.value;
+  if (!id) return alert("Select a matter first.");
+  favorites = [id, ...favorites.filter(x => x !== id)].slice(0, 40);
+  saveJSON(LS.favorites, favorites);
+  renderRecentsAndFavorites();
+});
+
+/* -----------------------------
+   Dictation-friendly UX
+--------------------------------*/
+focusDesc.addEventListener("click", () => {
+  desc.focus();
+  desc.scrollIntoView({ behavior: "smooth", block: "center" });
 });
 
 /* -----------------------------
    Entries
 --------------------------------*/
-function addEntry() {
+function addEntry(dateISO, matterId, description, hrs) {
+  const m = matters.find(x => x.full_id === matterId);
+  const item = {
+    id: cryptoId(),
+    date: dateISO,
+    timekeeper: safeTK(),
+    matter_full_id: matterId,
+    client_name: m?.client_name || "",
+    matter_desc: m?.matter_desc || "",
+    hours: Number(hrs),
+    description: (description || "").trim(),
+    created_at: Date.now()
+  };
+  entries.unshift(item);
+}
+function validateAdd() {
   const id = selectedFullId.value;
   const d = (desc.value || "").trim();
   const h = (hours.value || "").toString().trim();
   const dt = workDate.value || todayISO();
 
-  if (!id) return alert("Select a Client/Matter first.");
-  if (!d) return alert("Add a description.");
-  if (!h || isNaN(Number(h)) || Number(h) <= 0) return alert("Enter hours (e.g., 0.3).");
+  if (!id) return "Select a Client/Matter first.";
+  if (!d) return "Add a description.";
+  if (!h || isNaN(Number(h)) || Number(h) <= 0) return "Enter hours (e.g., 0.3).";
+  if (!dt) return "Pick a date.";
+  return null;
+}
+addEntryBtn.addEventListener("click", () => {
+  const err = validateAdd();
+  if (err) return alert(err);
 
-  const m = matters.find(x => x.full_id === id);
-  const item = {
-    id: cryptoId(),
-    date: dt,
-    timekeeper: safeTK(),
-    matter_full_id: id,
-    client_name: m?.client_name || "",
-    matter_desc: m?.matter_desc || "",
-    hours: Number(h),
-    description: d,
-    created_at: Date.now()
-  };
-
-  entries.unshift(item);
+  addEntry(workDate.value, selectedFullId.value, desc.value, hours.value);
   saveJSON(LS.entries, entries);
 
-  // reset fields but keep selection (you can clear if you want)
   desc.value = "";
   hours.value = "";
   desc.focus();
 
   renderReview();
-}
-addEntryBtn.addEventListener("click", addEntry);
-
+  renderPills();
+});
 addPoint1.addEventListener("click", () => {
   const cur = Number(hours.value || 0);
   hours.value = (Math.round((cur + 0.1) * 10) / 10).toFixed(1);
 });
 
-/* -----------------------------
-   Review UI
---------------------------------*/
-reviewDate.addEventListener("change", renderReview);
+/* Duplicate yesterday */
+dupYesterdayBtn.addEventListener("click", () => {
+  const t = todayISO();
+  const y = isoFromDate(new Date(new Date(t + "T12:00:00").getTime() - 86400000));
+  const yEntries = entries.filter(e => e.date === y);
 
-function renderReview() {
-  const dt = reviewDate.value || todayISO();
-  const list = entries.filter(e => e.date === dt);
+  if (!yEntries.length) return alert("No entries found for yesterday.");
+  if (!confirm(`Duplicate ${yEntries.length} entries from ${y} to ${t}?`)) return;
 
-  entriesList.innerHTML = "";
-
-  let total = 0;
-  for (const e of list) total += Number(e.hours || 0);
-  totalHours.value = total.toFixed(1);
-
-  if (!list.length) {
-    entriesList.innerHTML = `<div class="small muted" style="margin-top:8px;">No entries for ${dt}.</div>`;
-    return;
+  // Duplicate in same order (oldest to newest) so they land sensibly
+  const ordered = [...yEntries].sort((a,b) => (a.created_at||0) - (b.created_at||0));
+  for (const e of ordered) {
+    addEntry(t, e.matter_full_id, e.description, e.hours);
   }
+  saveJSON(LS.entries, entries);
 
-  for (const e of list) {
-    const div = document.createElement("div");
-    div.className = "entry";
-    div.innerHTML = `
-      <div class="meta">
-        <div class="left">
-          <span class="badge"><b>${escapeHTML(e.matter_full_id)}</b></span>
-          <span class="badge">${escapeHTML(e.hours.toFixed(1))} hrs</span>
-          <span class="badge">TK ${escapeHTML(e.timekeeper || safeTK())}</span>
-        </div>
-        <div class="small muted">${escapeHTML(e.client_name)} — ${escapeHTML(e.matter_desc)}</div>
-      </div>
-      <div class="desc">${escapeHTML(e.description)}</div>
-      <div class="actions">
-        <button class="btn secondary" onclick="editEntry('${e.id}')">Edit</button>
-        <button class="btn danger" onclick="deleteEntry('${e.id}')">Delete</button>
-      </div>
-    `;
-    entriesList.appendChild(div);
-  }
-}
+  workDate.value = t;
+  renderReview();
+  renderPills();
+});
 
+/* Edit/Delete */
 window.deleteEntry = function(id) {
   entries = entries.filter(e => e.id !== id);
   saveJSON(LS.entries, entries);
   renderReview();
+  renderPills();
 };
-
 window.editEntry = function(id) {
   const e = entries.find(x => x.id === id);
   if (!e) return;
@@ -604,40 +666,90 @@ window.editEntry = function(id) {
   e.hours = h;
   saveJSON(LS.entries, entries);
   renderReview();
+  renderPills();
 };
 
-clearAll.addEventListener("click", () => {
-  if (!confirm("Clear ALL entries?")) return;
-  entries = [];
-  saveJSON(LS.entries, entries);
-  renderReview();
-});
-
 /* -----------------------------
-   Export
+   Review + totals (daily + weekly)
 --------------------------------*/
-exportCsvBtn.addEventListener("click", () => {
+reviewDate.addEventListener("change", () => { renderReview(); renderPills(); });
+
+function renderReview() {
   const dt = reviewDate.value || todayISO();
   const list = entries.filter(e => e.date === dt);
-  if (!list.length) return alert(`No entries for ${dt}.`);
-  downloadCSV(list, `tabs3_${dt}.csv`);
-});
 
-exportRangeBtn.addEventListener("click", () => {
-  const start = prompt("Start date (YYYY-MM-DD):", todayISO());
-  if (!start) return;
-  const end = prompt("End date (YYYY-MM-DD):", todayISO());
-  if (!end) return;
+  // daily totals
+  let total = 0;
+  for (const e of list) total += Number(e.hours || 0);
+  totalHours.value = total.toFixed(1);
+  totalEntries.textContent = String(list.length);
 
-  const list = entries.filter(e => e.date >= start && e.date <= end);
-  if (!list.length) return alert("No entries in that date range.");
-  downloadCSV(list, `tabs3_${start}_to_${end}.csv`);
-});
+  // weekly totals Mon-Sun
+  const mon = mondayOf(dt);
+  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
+  const monISO = isoFromDate(mon);
+  const sunISO = isoFromDate(sun);
+  weekRange.textContent = `${monISO} to ${sunISO}`;
 
-function downloadCSV(list, filename) {
-  // Keep this simple and stable: Date, Timekeeper, Matter, Hours, Description
-  // Timekeeper ALWAYS present (default 70)
-  let csv = "Date,Timekeeper,Matter,Hours,Description\n";
+  const wList = entries.filter(e => e.date >= monISO && e.date <= sunISO);
+  let wTotal = 0;
+  for (const e of wList) wTotal += Number(e.hours || 0);
+  weekHours.value = wTotal.toFixed(1);
+
+  // list UI
+  entriesList.innerHTML = "";
+  if (!list.length) {
+    entriesList.innerHTML = `<div class="small" style="margin-top:10px;">No entries for ${escapeHTML(dt)}.</div>`;
+    return;
+  }
+
+  for (const e of list) {
+    const div = document.createElement("div");
+    div.className = "entry";
+    div.innerHTML = `
+      <div class="meta">
+        <div class="badges">
+          <span class="badge mono"><b>${escapeHTML(e.matter_full_id)}</b></span>
+          <span class="badge">${escapeHTML(Number(e.hours).toFixed(1))} hrs</span>
+          <span class="badge">TK ${escapeHTML(e.timekeeper || safeTK())}</span>
+        </div>
+        <div class="small">${escapeHTML(e.client_name)} — ${escapeHTML(e.matter_desc)}</div>
+      </div>
+      <div class="desc">${escapeHTML(e.description)}</div>
+      <div class="actions">
+        <button class="btn secondary" onclick="editEntry('${e.id}')">Edit</button>
+        <button class="btn danger" onclick="deleteEntry('${e.id}')">Delete</button>
+      </div>
+    `;
+    entriesList.appendChild(div);
+  }
+}
+
+function renderPills() {
+  const t = todayISO();
+  const list = entries.filter(e => e.date === t);
+  let total = 0;
+  for (const e of list) total += Number(e.hours || 0);
+  countsPill.textContent = `${list.length} today`;
+  hoursPill.textContent = `${total.toFixed(1)} hrs`;
+}
+
+/* -----------------------------
+   CSV Export
+--------------------------------*/
+function headerForPreset(preset) {
+  if (preset === "simple") return "Date,Timekeeper,Matter,Hours,Description";
+  if (preset === "tabs3like") return "Date,Timekeeper,ClientMatterID,Hours,Narrative";
+  return (customHeader.value || "").trim() || "Date,Timekeeper,Matter,Hours,Description";
+}
+function exportList(list, filename) {
+  if (!list.length) return alert("No entries to export.");
+
+  const header = headerForPreset(exportPreset.value);
+  let csv = header + "\n";
+
+  // Always output 5 fields in this exact order:
+  // Date, Timekeeper, MatterID, Hours, Description
   for (const e of list) {
     const tk = (e.timekeeper || safeTK() || "70");
     const line = [
@@ -650,7 +762,7 @@ function downloadCSV(list, filename) {
     csv += line + "\n";
   }
 
-  const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+  const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
@@ -661,10 +773,144 @@ function downloadCSV(list, filename) {
   URL.revokeObjectURL(url);
 }
 
-function csvQuote(s) {
-  const t = (s ?? "").toString().replace(/"/g, '""');
-  return `"${t}"`;
-}
+exportDay.addEventListener("click", () => {
+  const t = todayISO();
+  const list = entries.filter(e => e.date === t);
+  exportList(list, `tabs3_${t}.csv`);
+});
+exportReview.addEventListener("click", () => {
+  const dt = reviewDate.value || todayISO();
+  const list = entries.filter(e => e.date === dt);
+  exportList(list, `tabs3_${dt}.csv`);
+});
+exportRangeBtn.addEventListener("click", () => {
+  const start = prompt("Start date (YYYY-MM-DD):", todayISO());
+  if (!start) return;
+  const end = prompt("End date (YYYY-MM-DD):", todayISO());
+  if (!end) return;
+
+  const list = entries.filter(e => e.date >= start && e.date <= end);
+  exportList(list, `tabs3_${start}_to_${end}.csv`);
+});
+
+/* -----------------------------
+   Backup / Restore
+--------------------------------*/
+backupBtn.addEventListener("click", () => {
+  const payload = {
+    version: 2,
+    exported_at: new Date().toISOString(),
+    matters, entries, recents, favorites, settings
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `tabs3_backup_${todayISO()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+});
+
+restoreFile.addEventListener("change", async () => {
+  const file = restoreFile.files && restoreFile.files[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const obj = JSON.parse(text);
+
+    if (!obj || typeof obj !== "object") throw new Error("Invalid JSON");
+    if (!confirm("Restore will overwrite current data on this device/browser. Continue?")) return;
+
+    matters = Array.isArray(obj.matters) ? obj.matters : [];
+    entries = Array.isArray(obj.entries) ? obj.entries : [];
+    recents = Array.isArray(obj.recents) ? obj.recents : [];
+    favorites = Array.isArray(obj.favorites) ? obj.favorites : [];
+    settings = (obj.settings && typeof obj.settings === "object") ? obj.settings : { timekeeper:"70" };
+
+    saveJSON(LS.matters, matters);
+    saveJSON(LS.entries, entries);
+    saveJSON(LS.recents, recents);
+    saveJSON(LS.favorites, favorites);
+    saveJSON(LS.settings, settings);
+
+    renderSettings();
+    renderRecentsAndFavorites();
+    renderReview();
+    renderPills();
+    alert("Restore complete.");
+  } catch (e) {
+    alert("Could not restore. Make sure it’s a valid backup JSON file.");
+  } finally {
+    restoreFile.value = "";
+  }
+});
+
+/* -----------------------------
+   CSV Import (matters)
+--------------------------------*/
+csvFile.addEventListener("change", async () => {
+  const file = csvFile.files && csvFile.files[0];
+  if (!file) return;
+
+  const text = await file.text();
+  const parsed = parseCSV(text);
+  if (!parsed.rows.length) return alert("Could not read CSV rows.");
+
+  const headers = parsed.headers.map(h => normalize(h));
+  const idx = (names) => {
+    for (const n of names) {
+      const i = headers.indexOf(normalize(n));
+      if (i >= 0) return i;
+    }
+    return -1;
+  };
+
+  const idI = idx(["client id","clientid","id","matter id","matterid","tabs3 id","clientmatterid"]);
+  const clientNameI = idx(["client name","client","clientname"]);
+  const matterDescI = idx(["matter","matter description","matterdesc","description","matter desc"]);
+
+  if (idI < 0) return alert('CSV must contain a "Client ID" column with full IDs like 11015.0001.');
+
+  const newMatters = [];
+  for (const r of parsed.rows) {
+    const full_id = (r[idI] || "").trim();
+    if (!full_id || !full_id.includes(".")) continue;
+
+    const parts = full_id.split(".");
+    const client_id = parts[0] || "";
+    const matter_id = parts[1] || "";
+
+    const client_name = clientNameI >= 0 ? (r[clientNameI] || "").trim() : "";
+    const matter_desc = matterDescI >= 0 ? (r[matterDescI] || "").trim() : "";
+
+    // Search text: include abbreviations if you want later by editing this line (e.g., add "pmg" etc.)
+    const search_text = normalize(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`);
+    newMatters.push({ full_id, client_id, matter_id, client_name, matter_desc, search_text });
+  }
+
+  if (!newMatters.length) return alert("No valid rows found (need full IDs like 11015.0001).");
+
+  matters = newMatters;
+  saveJSON(LS.matters, matters);
+
+  // Don’t wipe recents/favorites, but they won’t label nicely if IDs changed
+  renderRecentsAndFavorites();
+  selectedLine.textContent = "None";
+  alert(`Imported ${matters.length} matters.`);
+});
+
+/* -----------------------------
+   Clear all
+--------------------------------*/
+clearAll.addEventListener("click", () => {
+  if (!confirm("Clear ALL entries? This cannot be undone (use Backup first if you want).")) return;
+  entries = [];
+  saveJSON(LS.entries, entries);
+  renderReview();
+  renderPills();
+});
 
 /* -----------------------------
    Tiny CSV parser
@@ -699,37 +945,23 @@ function parseCSV(text) {
 }
 
 /* -----------------------------
-   Utilities
---------------------------------*/
-function escapeHTML(str) {
-  return (str ?? "").toString()
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function cryptoId() {
-  return (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
-}
-
-/* -----------------------------
    Boot
 --------------------------------*/
 function boot() {
-  // Ensure settings exist
-  if (!settings || typeof settings !== "object") settings = { timekeeper: "70" };
+  initDates();
+  if (!settings || typeof settings !== "object") settings = { timekeeper:"70" };
   if (!settings.timekeeper) settings.timekeeper = "70";
   saveJSON(LS.settings, settings);
 
   renderSettings();
   renderRecentsAndFavorites();
   renderReview();
+  renderPills();
 
-  // If no matters imported yet, give a hint in dropdown behavior
-  if (!matters.length) {
-    selectedLine.textContent = "None (Import your Client/Matter CSV above)";
-  }
+  // nice defaults
+  customHeader.value = "Date,Timekeeper,Matter,Hours,Description";
+  workDate.value = workDate.value || todayISO();
+  reviewDate.value = reviewDate.value || todayISO();
 }
 boot();
 </script>
