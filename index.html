@@ -5,966 +5,392 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
 <title>Tabs3 Time Capture</title>
 <style>
-  :root { --bg:#f4f6fb; --card:#fff; --ink:#101423; --muted:#5f6a7d; --brand:#153a77; --line:#e5eaf6; --soft:#f7f9ff; --danger:#b42318; }
+  :root {
+    --bg:#f4f6fb; --card:#fff; --ink:#101423; --muted:#5f6a7d;
+    --brand:#153a77; --line:#e5eaf6; --soft:#f7f9ff;
+    --danger:#b42318; --success:#0a7c42; --warn:#b45309;
+  }
+  *{ box-sizing:border-box; }
   body{ margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
-  header{ position:sticky; top:0; z-index:50; background:var(--brand); color:#fff; padding:14px 16px; box-shadow:0 2px 12px rgba(0,0,0,.16); }
-  header .row{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-  header h1{ margin:0; font-size:16px; font-weight:800; letter-spacing:.2px; }
-  header .pill{ font-size:12px; background:rgba(255,255,255,.18); padding:6px 10px; border-radius:999px; }
-  header .pill b{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+  .modal-overlay{ position:fixed; inset:0; background:rgba(10,15,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; }
+  .modal-overlay.hidden{ display:none; }
+  .modal{ background:#fff; border-radius:20px; padding:28px 24px; max-width:420px; width:100%; box-shadow:0 24px 60px rgba(10,20,50,.22); }
+  .modal h2{ margin:0 0 6px; font-size:20px; color:var(--brand); }
+  .modal p{ margin:0 0 18px; color:var(--muted); font-size:14px; }
+  .modal label{ display:block; font-size:12px; font-weight:900; color:#2a3550; margin-bottom:5px; margin-top:14px; }
+  .modal input{ width:100%; font-size:16px; padding:12px; border-radius:12px; border:1px solid #d7deee; outline:none; }
+  .modal input:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(21,58,119,.13); }
+  .modal .mactions{ margin-top:20px; display:flex; gap:10px; }
+  .modal .mactions button{ flex:1; }
+  .hint-text{ font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
+  header{ position:sticky; top:0; z-index:50; background:var(--brand); color:#fff; padding:12px 16px; box-shadow:0 2px 12px rgba(0,0,0,.18); }
+  .hrow{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  header h1{ margin:0; font-size:15px; font-weight:800; }
+  .pills{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .pill{ font-size:12px; background:rgba(255,255,255,.18); padding:5px 10px; border-radius:999px; white-space:nowrap; }
+  .pill b{ font-family:ui-monospace,monospace; }
+  .pill.tap{ cursor:pointer; border:1px solid rgba(255,255,255,.3); }
+  .pill.tap:hover,.pill.tap:active{ background:rgba(255,255,255,.28); }
   main{ max-width:980px; margin:0 auto; padding:14px 16px 120px; }
   .card{ background:var(--card); border-radius:14px; padding:14px; box-shadow:0 2px 12px rgba(15,25,40,.06); margin-bottom:12px; border:1px solid rgba(229,234,246,.7); }
+  .ctitle{ font-size:12px; font-weight:900; color:var(--brand); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
   .grid{ display:grid; grid-template-columns:1fr; gap:10px; }
   @media(min-width:820px){ .grid.two{ grid-template-columns:1fr 1fr; } .grid.three{ grid-template-columns:1fr 1fr 1fr; } }
   label{ display:block; font-size:12px; font-weight:900; color:#2a3550; margin-bottom:6px; }
-  input, textarea, select, button{
-    width:100%; box-sizing:border-box; font-size:16px; padding:12px; border-radius:12px; border:1px solid #d7deee;
-    outline:none; background:#fff;
-  }
+  input,textarea,select,button{ width:100%; font-size:16px; padding:12px; border-radius:12px; border:1px solid #d7deee; outline:none; background:#fff; }
   textarea{ min-height:92px; resize:vertical; }
-  input:focus, textarea:focus, select:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(21,58,119,.14); }
+  input:focus,textarea:focus,select:focus{ border-color:var(--brand); box-shadow:0 0 0 3px rgba(21,58,119,.14); }
   .row{ display:flex; gap:10px; flex-wrap:wrap; }
-  .row > *{ flex:1; min-width:140px; }
-  .btn{ background:var(--brand); color:#fff; border:none; font-weight:900; }
-  .btn.secondary{ background:var(--soft); color:var(--brand); border:1px solid #d6ddff; }
+  .row>*{ flex:1; min-width:130px; }
+  .btn{ background:var(--brand); color:#fff; border:none; font-weight:900; cursor:pointer; }
+  .btn:active{ opacity:.85; }
+  .btn.sec{ background:var(--soft); color:var(--brand); border:1px solid #d6ddff; }
   .btn.danger{ background:var(--danger); color:#fff; border:none; }
-  .small{ font-size:12px; color:var(--muted); line-height:1.35; }
-  .divider{ height:1px; background:#eef1f8; margin:10px 0; }
-  .mono{ font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
-
-  /* Search */
-  .searchWrap{ position:relative; }
-  .dropdown{
-    position:absolute; left:0; right:0; top:calc(100% + 8px);
-    background:#fff; border:1px solid #d7deee; border-radius:14px; overflow:hidden;
-    box-shadow:0 14px 36px rgba(20,30,55,.18);
-    display:none; max-height:340px; overflow:auto; z-index:100;
-  }
-  .opt{ padding:10px 12px; border-bottom:1px solid #f0f2f8; cursor:pointer; }
+  .btn.ok{ background:var(--success); color:#fff; border:none; }
+  .small{ font-size:12px; color:var(--muted); line-height:1.4; }
+  .divider{ height:1px; background:#eef1f8; margin:12px 0; }
+  .mono{ font-family:ui-monospace,monospace; }
+  .sbar{ font-size:12px; padding:8px 12px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+  .sbar.ok{ background:#e8f7ef; color:var(--success); border:1px solid #b2e4ca; }
+  .sbar.warn{ background:#fef3e2; color:var(--warn); border:1px solid #fcd88a; }
+  .sbar.err{ background:#fdecea; color:var(--danger); border:1px solid #f5b7b1; }
+  .sdot{ width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .sbar.ok .sdot{ background:var(--success); }
+  .sbar.warn .sdot{ background:var(--warn); }
+  .sbar.err .sdot{ background:var(--danger); }
+  .swrap{ position:relative; }
+  .dd{ position:absolute; left:0; right:0; top:calc(100%+6px); background:#fff; border:1px solid #d7deee; border-radius:14px; overflow:hidden; box-shadow:0 14px 36px rgba(20,30,55,.18); display:none; max-height:300px; overflow-y:auto; z-index:100; }
+  .opt{ padding:12px 14px; border-bottom:1px solid #f0f2f8; cursor:pointer; min-height:52px; }
   .opt:last-child{ border-bottom:none; }
-  .opt:hover{ background:#f2f6ff; }
-  .opt .top{ font-weight:900; font-size:14px; }
-  .opt .mid{ font-size:13px; color:#28324a; margin-top:3px; }
-  .opt .bot{ margin-top:4px; display:flex; align-items:center; justify-content:space-between; gap:10px; font-size:12px; color:#667; }
-  .chip{ font-size:12px; border:1px solid var(--line); background:var(--soft); padding:3px 8px; border-radius:999px; }
-
-  /* Entries */
+  .opt:hover,.opt:active{ background:#f2f6ff; }
+  .opt .otop{ font-weight:900; font-size:14px; }
+  .opt .omid{ font-size:13px; color:#28324a; margin-top:2px; }
+  .opt .obot{ font-size:12px; color:#667; margin-top:2px; }
   .entry{ border:1px solid var(--line); background:#fff; border-radius:14px; padding:12px; margin-top:10px; }
-  .entry .meta{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
-  .badges{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .emeta{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
+  .badges{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
   .badge{ font-size:12px; border:1px solid var(--line); background:var(--soft); padding:4px 8px; border-radius:999px; }
-  .entry .desc{ margin-top:8px; white-space:pre-wrap; }
-  .entry .actions{ margin-top:10px; display:flex; gap:8px; }
-  .entry .actions button{ padding:10px; font-size:14px; border-radius:12px; }
-
-  footer{
-    position:fixed; left:0; right:0; bottom:0;
-    background:rgba(244,246,251,.92); backdrop-filter:blur(10px);
-    border-top:1px solid #e8ecf8;
-  }
-  footer .wrap{ max-width:980px; margin:0 auto; padding:10px 16px; display:flex; gap:10px; }
-  footer .wrap button{ border-radius:14px; }
+  .ubadge{ background:#eef2ff; border-color:#c7d2fe; color:#3730a3; }
+  .edesc{ margin-top:8px; white-space:pre-wrap; font-size:14px; }
+  .eactions{ margin-top:10px; display:flex; gap:8px; }
+  .eactions button{ padding:10px; font-size:14px; border-radius:12px; }
+  footer{ position:fixed; left:0; right:0; bottom:0; background:rgba(244,246,251,.94); backdrop-filter:blur(10px); border-top:1px solid #e8ecf8; }
+  footer .wrap{ max-width:980px; margin:0 auto; padding:10px 14px; display:flex; gap:8px; flex-wrap:wrap; }
+  footer .wrap button{ border-radius:14px; flex:1; min-width:0; }
+  .tabs{ display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
+  .tbtn{ padding:9px 16px; border-radius:12px; border:1px solid #d7deee; background:var(--soft); color:var(--muted); font-weight:700; font-size:13px; cursor:pointer; width:auto; }
+  .tbtn.active{ background:var(--brand); color:#fff; border-color:var(--brand); }
+  .tcontent{ display:none; }
+  .tcontent.active{ display:block; }
+  .quick{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
+  .quick button{ flex:none; width:auto; padding:8px 14px; font-size:14px; border-radius:10px; }
+  .helpbox{ background:#f0f4ff; border-radius:10px; padding:12px; margin-bottom:12px; display:none; }
+  .helpbox ol{ margin:4px 0 0; padding-left:18px; }
+  .helpbox li{ font-size:13px; line-height:2; color:var(--ink); }
 </style>
 </head>
 <body>
-
+<div id="pwModal" class="modal-overlay">
+  <div class="modal">
+    <h2>🔒 Firm Access</h2>
+    <p>Enter the firm password to continue.</p>
+    <label>Password</label>
+    <input id="pwInput" type="password" placeholder="Enter password" />
+    <div id="pwErr" style="display:none;color:var(--danger);font-size:13px;margin-top:8px;">Incorrect password.</div>
+    <div class="mactions"><button class="btn" onclick="submitPW()">Unlock</button></div>
+  </div>
+</div>
+<div id="setupModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h2>👤 Your Profile</h2>
+    <p>Set your name and timekeeper code. Tap your name in the header anytime to change it.</p>
+    <label>Your Name</label>
+    <input id="setupName" type="text" placeholder="e.g. Michael Mackey" autocomplete="name" />
+    <label>Timekeeper Code</label>
+    <input id="setupTK" type="text" inputmode="numeric" placeholder="e.g. 70" autocomplete="off" />
+    <div class="hint-text">Your TK code is automatically added to every Tabs3 CSV export.</div>
+    <div class="mactions"><button class="btn" onclick="saveProfile()">Save & Continue</button></div>
+  </div>
+</div>
+<div id="editModal" class="modal-overlay hidden">
+  <div class="modal">
+    <h2>✏️ Edit Profile</h2>
+    <p>Update your name or timekeeper code.</p>
+    <label>Your Name</label>
+    <input id="editName" type="text" autocomplete="name" />
+    <label>Timekeeper Code</label>
+    <input id="editTK" type="text" inputmode="numeric" autocomplete="off" />
+    <div class="mactions">
+      <button class="btn" onclick="saveEditProfile()">Save</button>
+      <button class="btn sec" onclick="closeModal('editModal')">Cancel</button>
+    </div>
+  </div>
+</div>
 <header>
-  <div class="row">
-    <h1>Tabs3 Time Capture</h1>
-    <div class="pill">TK <b id="tkPill">70</b> · <span id="countsPill">0 today</span> · <span id="hoursPill">0.0 hrs</span></div>
+  <div class="hrow">
+    <h1>⚖️ Tabs3 Time Capture</h1>
+    <div class="pills">
+      <div class="pill tap" id="userPill" onclick="openEditProfile()" title="Tap to edit">
+        👤 <span id="pillName">—</span> · TK <b id="pillTK">—</b>
+      </div>
+      <div class="pill" id="pillCount">0 today</div>
+      <div class="pill" id="pillHours">0.0 hrs</div>
+    </div>
   </div>
 </header>
-
 <main>
-
+<div class="tabs">
+  <button class="tbtn active" onclick="showTab('entry')">⏱ Enter Time</button>
+  <button class="tbtn" onclick="showTab('review')">📋 Review</button>
+  <button class="tbtn" onclick="showTab('settings')">⚙️ Settings</button>
+</div>
+<div id="t-entry" class="tcontent active">
   <div class="card">
-    <div class="grid three">
-      <div>
-        <label>Import Client/Matter CSV</label>
-        <input id="csvFile" type="file" accept=".csv,text/csv" />
-        <div class="small" style="margin-top:6px;">
-          Needs a full Tabs3 ID like <span class="mono">11015.0001</span> plus client name + matter description.
-          Column names can be “Client ID / Client Name / Matter” (flexible).
-        </div>
-      </div>
-
-      <div>
-        <label>Settings</label>
-        <div class="row">
-          <input id="timekeeper" inputmode="numeric" placeholder="Timekeeper (default 70)" />
-          <button class="btn secondary" id="saveSettings">Save</button>
-        </div>
-        <div class="small" style="margin-top:6px;">
-          Timekeeper is always included in export. If blank, it exports <b>70</b>.
-        </div>
-      </div>
-
-      <div>
-        <label>Backup / Restore</label>
-        <div class="row">
-          <button class="btn secondary" id="backupBtn">Download Backup</button>
-          <label class="btn secondary" style="display:flex; align-items:center; justify-content:center; cursor:pointer; margin:0;">
-            Restore
-            <input id="restoreFile" type="file" accept=".json,application/json" style="display:none;">
-          </label>
-        </div>
-        <div class="small" style="margin-top:6px;">
-          Backup is a JSON file containing matters, entries, recents, favorites, settings.
-        </div>
-      </div>
+    <div class="ctitle">Client / Matter</div>
+    <div id="listBar" class="sbar warn" style="display:none;"><div class="sdot"></div><span id="listBarText"></span></div>
+    <div class="grid two" style="margin-bottom:10px;">
+      <div><label>Recents</label><select id="recents"></select></div>
+      <div><label>Favorites</label><select id="favorites"></select></div>
     </div>
-
-    <div class="divider"></div>
-
-    <div class="grid two">
-      <div>
-        <label>Recents</label>
-        <select id="recents"></select>
-      </div>
-      <div>
-        <label>Favorites</label>
-        <select id="favorites"></select>
+    <label>Search / Dictate</label>
+    <div class="swrap">
+      <input id="mSearch" type="text" inputmode="text" autocomplete="off" autocapitalize="none"
+        autocorrect="off" spellcheck="false"
+        placeholder='Type name, matter, or ID… e.g. "PMG" or "11015"' />
+      <div id="dd" class="dd"></div>
+    </div>
+    <div style="margin-top:10px;">
+      <div class="small">Selected:</div>
+      <div id="selLine" style="font-weight:900;font-size:15px;margin-top:4px;color:var(--brand);">None</div>
+      <input type="hidden" id="selId" />
+      <div class="row" style="margin-top:10px;">
+        <button class="btn sec" id="focusDescBtn">🎤 Focus Description</button>
+        <button class="btn sec" id="addFavBtn">⭐ Favorite</button>
+        <button class="btn sec" id="clearSelBtn">✕ Clear</button>
       </div>
     </div>
   </div>
-
   <div class="card">
-    <label>Client/Matter (one box)</label>
-    <div class="searchWrap">
-      <input
-        id="matterSearch"
-        type="text"
-        inputmode="text"
-        autocomplete="off"
-        autocapitalize="none"
-        autocorrect="off"
-        spellcheck="false"
-        placeholder='Dictate/type… e.g., “Gamma TSX” or “11015” or “PMG”'
-      />
-      <div id="dropdown" class="dropdown"></div>
-    </div>
-
-    <div style="margin-top:10px;">
-      <div class="small">Selected:</div>
-      <div id="selectedLine" style="font-weight:900; margin-top:4px;">None (import matters first)</div>
-      <input type="hidden" id="selectedFullId" />
-
-      <div class="row" style="margin-top:10px;">
-        <button class="btn secondary" id="focusDesc">Focus Description (dictate)</button>
-        <button class="btn secondary" id="addFav">Add to Favorites</button>
-        <button class="btn secondary" id="clearSel">Clear Selection</button>
-      </div>
-    </div>
-
-    <div class="divider"></div>
-
+    <div class="ctitle">Time Entry</div>
     <div class="grid two">
       <div>
         <label>Description</label>
-        <textarea id="desc" placeholder="Dictate work description here…"></textarea>
+        <textarea id="desc" placeholder="Dictate or type work description…"></textarea>
       </div>
-
       <div class="grid">
-        <div class="grid three">
-          <div>
-            <label>Hours</label>
-            <input id="hours" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 0.3" />
-          </div>
-          <div>
-            <label>Date</label>
-            <input id="workDate" type="date" />
-          </div>
-          <div>
-            <label>Quick</label>
-            <button class="btn secondary" id="addPoint1">+0.1</button>
+        <div class="grid two">
+          <div><label>Hours</label><input id="hours" type="number" step="0.1" inputmode="decimal" placeholder="e.g., 0.3" /></div>
+          <div><label>Date</label><input id="workDate" type="date" /></div>
+        </div>
+        <div>
+          <label>Quick Add</label>
+          <div class="quick">
+            <button class="btn sec" onclick="addH(0.1)">+0.1</button>
+            <button class="btn sec" onclick="addH(0.2)">+0.2</button>
+            <button class="btn sec" onclick="addH(0.3)">+0.3</button>
+            <button class="btn sec" onclick="addH(0.5)">+0.5</button>
+            <button class="btn sec" onclick="addH(1.0)">+1.0</button>
           </div>
         </div>
-
         <div class="row">
-          <button class="btn" id="addEntry">Add Entry</button>
-          <button class="btn secondary" id="dupYesterday">Duplicate Yesterday → Today</button>
+          <button class="btn" id="addBtn">➕ Add Entry</button>
+          <button class="btn sec" id="dupBtn">📋 Dup Yesterday</button>
         </div>
-
-        <div class="small">
-          Tip: Pick the matter first, then dictate the description. “Duplicate yesterday” is great for recurring admin/billing blocks.
-        </div>
+        <div class="small">Tip: Select matter first, then dictate description.</div>
       </div>
     </div>
   </div>
-
+</div>
+<div id="t-review" class="tcontent">
   <div class="card">
+    <div class="ctitle">Daily Review</div>
     <div class="grid three">
       <div>
-        <label>Daily Review Date</label>
+        <label>Review Date</label>
         <input id="reviewDate" type="date" />
-        <div class="small" style="margin-top:6px;">Edits/deletes apply only to this date.</div>
+        <div class="small" style="margin-top:5px;">Edit/delete for this date.</div>
       </div>
       <div>
-        <label>Daily Total</label>
+        <label>Day Total</label>
         <input id="totalHours" readonly />
-        <div class="small" style="margin-top:6px;">Entries: <span id="totalEntries">0</span></div>
+        <div class="small" style="margin-top:5px;">Entries: <span id="totalEntries">0</span></div>
       </div>
       <div>
-        <label>Weekly Total (Mon–Sun)</label>
+        <label>Week Total (Mon–Sun)</label>
         <input id="weekHours" readonly />
-        <div class="small" style="margin-top:6px;"><span id="weekRange">—</span></div>
+        <div class="small" style="margin-top:5px;"><span id="weekRange">—</span></div>
       </div>
     </div>
-
     <div class="divider"></div>
-
+    <div id="entriesList"></div>
+    <div class="divider"></div>
+    <button class="btn danger" id="clearAllBtn">🗑 Clear ALL Entries (this device)</button>
+  </div>
+</div>
+<div id="t-settings" class="tcontent">
+  <div class="card">
+    <div class="ctitle">🔗 Shared Client List — Firm-Wide</div>
+    <p class="small">
+      Set this up once and <strong>every firm user automatically gets the same client list</strong> — no manual imports.
+      Uses <a href="https://jsonbin.io" target="_blank" style="color:var(--brand);">JSONBin.io</a> (free).
+      <a href="#" onclick="toggleHelp();return false;" style="color:var(--brand);">How to set up ▸</a>
+    </p>
+    <div id="helpBox" class="helpbox">
+      <strong style="font-size:13px;">One-time setup (~3 minutes):</strong>
+      <ol>
+        <li>Go to <a href="https://jsonbin.io" target="_blank" style="color:var(--brand);">jsonbin.io</a> → sign up free</li>
+        <li>Click <strong>API Keys</strong> in the dashboard → copy your <strong>Master Key</strong></li>
+        <li>Paste it below → click <strong>Create New Bin</strong></li>
+        <li>Import your client file below → click <strong>Sync to Shared</strong></li>
+        <li>Share the app URL with colleagues — they get the list automatically!</li>
+      </ol>
+    </div>
+    <div id="syncBar" class="sbar warn" style="display:none;"><div class="sdot"></div><span id="syncBarText"></span></div>
     <div class="grid two">
       <div>
-        <label>Export Format</label>
+        <label>JSONBin Master Key</label>
+        <input id="jbKey" type="password" placeholder="$2b$10$…" autocomplete="off" />
+      </div>
+      <div>
+        <label>Bin ID <span class="small">(auto-filled after create)</span></label>
+        <input id="jbBin" type="text" placeholder="64abc123…" autocomplete="off" class="mono" />
+      </div>
+    </div>
+    <div class="row" style="margin-top:10px;">
+      <button class="btn sec" onclick="createBin()">🆕 Create Bin</button>
+      <button class="btn sec" onclick="saveJBSettings()">💾 Save Keys</button>
+      <button class="btn ok" onclick="syncUp()">☁️ Sync to Shared</button>
+      <button class="btn sec" onclick="syncDown(true)">⬇️ Fetch Shared</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📂 Import Client/Matter File</div>
+    <p class="small" style="margin-bottom:10px;">
+      Accepts <strong>.csv</strong>, <strong>.txt</strong>, or <strong>.exp</strong> exports from Tabs3.
+      Required columns: <span class="mono">Client ID</span> (e.g. <span class="mono">11015.0001</span>),
+      <span class="mono">Client Name</span>, <span class="mono">Matter</span>.
+      After import, click <strong>☁️ Sync to Shared</strong> above.
+    </p>
+    <input id="csvFile" type="file" accept=".csv,.txt,.exp,text/csv,text/plain" />
+    <div id="importMsg" class="small" style="margin-top:8px;"></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📤 Export Format</div>
+    <div class="grid two">
+      <div>
+        <label>Preset</label>
         <select id="exportPreset">
-          <option value="simple">Simple: Date,Timekeeper,Matter,Hours,Description</option>
-          <option value="tabs3like">Tabs3-like: Date,Timekeeper,ClientMatterID,Hours,Narrative</option>
-          <option value="custom">Custom Header Line (edit below)</option>
+          <option value="tabs3like">Tabs3: Date, Timekeeper, ClientMatterID, Hours, Narrative</option>
+          <option value="simple">Simple: Date, Timekeeper, Matter, Hours, Description</option>
+          <option value="custom">Custom Header (edit below)</option>
         </select>
       </div>
       <div>
-        <label>Custom Header Line (only used if Custom)</label>
-        <input id="customHeader" placeholder='e.g., Date,Timekeeper,Matter,Hours,Description' />
-        <div class="small" style="margin-top:6px;">Custom export uses the same 5 fields in that order.</div>
+        <label>Custom Header</label>
+        <input id="customHeader" placeholder="Date,Timekeeper,Matter,Hours,Description" />
       </div>
     </div>
-
-    <div id="entriesList"></div>
-
-    <div class="divider"></div>
-
+  </div>
+  <div class="card">
+    <div class="ctitle">💾 Backup & Restore</div>
+    <p class="small" style="margin-bottom:10px;">Each user backs up their own entries. The client list is shared via JSONBin.</p>
     <div class="row">
-      <button class="btn danger" id="clearAll">Clear ALL entries</button>
+      <button class="btn sec" id="backupBtn">⬇️ Download Backup</button>
+      <label class="btn sec" style="display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0;">
+        ⬆️ Restore Backup
+        <input id="restoreFile" type="file" accept=".json" style="display:none;">
+      </label>
     </div>
   </div>
-
+</div>
 </main>
-
 <footer>
   <div class="wrap">
     <button class="btn" id="exportDay">Export Today</button>
-    <button class="btn secondary" id="exportReview">Export Review Date</button>
-    <button class="btn secondary" id="exportRangeBtn">Export Date Range</button>
+    <button class="btn sec" id="exportReview">Export Review Date</button>
+    <button class="btn sec" id="exportRange">Export Range</button>
   </div>
 </footer>
-
 <script>
-/* -----------------------------
-   Storage keys
---------------------------------*/
-const LS = {
-  matters: "tabs3_matters_v2",
-  settings: "tabs3_settings_v2",
-  entries: "tabs3_entries_v2",
-  recents: "tabs3_recents_v2",
-  favorites: "tabs3_favorites_v2",
-};
-
-/* -----------------------------
-   Helpers
---------------------------------*/
-function loadJSON(key, fallback) {
-  try { return JSON.parse(localStorage.getItem(key) || "") ?? fallback; }
-  catch { return fallback; }
-}
-function saveJSON(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
-
-function todayISO() {
-  const d = new Date();
-  const tzOff = d.getTimezoneOffset() * 60000;
-  return new Date(d - tzOff).toISOString().slice(0,10);
-}
-function normalize(s) {
-  return (s || "")
-    .toLowerCase()
-    .replace(/[^\w\s.\-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-function escapeHTML(str) {
-  return (str ?? "").toString()
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function csvQuote(s) {
-  const t = (s ?? "").toString().replace(/"/g, '""');
-  return `"${t}"`;
-}
-function cryptoId() {
-  return (crypto && crypto.randomUUID) ? crypto.randomUUID() : String(Date.now()) + "_" + Math.random().toString(16).slice(2);
-}
-function mondayOf(dateISO) {
-  const d = new Date(dateISO + "T12:00:00");
-  const day = d.getDay(); // 0 Sun, 1 Mon...
-  const diff = (day === 0 ? -6 : 1 - day);
-  d.setDate(d.getDate() + diff);
-  return d;
-}
-function isoFromDate(d) {
-  const tzOff = d.getTimezoneOffset() * 60000;
-  return new Date(d - tzOff).toISOString().slice(0,10);
-}
-
-/* -----------------------------
-   State
---------------------------------*/
-let matters = loadJSON(LS.matters, []);
-let entries = loadJSON(LS.entries, []);
-let recents = loadJSON(LS.recents, []);
-let favorites = loadJSON(LS.favorites, []);
-let settings = loadJSON(LS.settings, { timekeeper: "70" });
-
-/* -----------------------------
-   DOM
---------------------------------*/
-const tkPill = document.getElementById("tkPill");
-const countsPill = document.getElementById("countsPill");
-const hoursPill = document.getElementById("hoursPill");
-
-const csvFile = document.getElementById("csvFile");
-const restoreFile = document.getElementById("restoreFile");
-const backupBtn = document.getElementById("backupBtn");
-
-const timekeeper = document.getElementById("timekeeper");
-const saveSettingsBtn = document.getElementById("saveSettings");
-
-const matterSearch = document.getElementById("matterSearch");
-const dropdown = document.getElementById("dropdown");
-const selectedLine = document.getElementById("selectedLine");
-const selectedFullId = document.getElementById("selectedFullId");
-
-const focusDesc = document.getElementById("focusDesc");
-const addFav = document.getElementById("addFav");
-const clearSel = document.getElementById("clearSel");
-
-const desc = document.getElementById("desc");
-const hours = document.getElementById("hours");
-const workDate = document.getElementById("workDate");
-const addPoint1 = document.getElementById("addPoint1");
-const addEntryBtn = document.getElementById("addEntry");
-const dupYesterdayBtn = document.getElementById("dupYesterday");
-
-const reviewDate = document.getElementById("reviewDate");
-const totalHours = document.getElementById("totalHours");
-const totalEntries = document.getElementById("totalEntries");
-const weekHours = document.getElementById("weekHours");
-const weekRange = document.getElementById("weekRange");
-const entriesList = document.getElementById("entriesList");
-const clearAll = document.getElementById("clearAll");
-
-const exportDay = document.getElementById("exportDay");
-const exportReview = document.getElementById("exportReview");
-const exportRangeBtn = document.getElementById("exportRangeBtn");
-
-const exportPreset = document.getElementById("exportPreset");
-const customHeader = document.getElementById("customHeader");
-
-const recentsSelect = document.getElementById("recents");
-const favoritesSelect = document.getElementById("favorites");
-
-/* -----------------------------
-   Timekeeper handling (always present)
---------------------------------*/
-function safeTK() {
-  const raw = (settings.timekeeper || "").toString().trim();
-  if (!raw) return "70";
-  const m = raw.match(/(\d+)/);
-  return (m && m[1]) ? m[1] : "70";
-}
-function renderSettings() {
-  const tk = safeTK();
-  tkPill.textContent = tk;
-  timekeeper.value = (settings.timekeeper || "70");
-}
-saveSettingsBtn.addEventListener("click", () => {
-  settings.timekeeper = (timekeeper.value || "").trim() || "70";
-  saveJSON(LS.settings, settings);
-  renderSettings();
-});
-
-/* -----------------------------
-   Auto date rollover
---------------------------------*/
-function initDates() {
-  const t = todayISO();
-  workDate.value = workDate.value || t;
-  reviewDate.value = reviewDate.value || t;
-}
-function dateRolloverTick() {
-  const t = todayISO();
-  if (!workDate.value) workDate.value = t;
-  if (!reviewDate.value) reviewDate.value = t;
-
-  // If user is still on yesterday, gently roll to today (only if they haven't explicitly set a different date)
-  if (workDate.value < t) workDate.value = t;
-  // For review date, leave it alone unless it was today/yesterday rollover and no entries exist for that date
-  // (keep conservative: don't change reviewDate automatically)
-}
-setInterval(dateRolloverTick, 60_000);
-
-/* -----------------------------
-   Matters: search indexing + ranking
---------------------------------*/
-function buildSearchText(m) {
-  const base = `${m.full_id} ${m.client_id || ""} ${m.matter_id || ""} ${m.client_name || ""} ${m.matter_desc || ""}`;
-  const st = (m.search_text && m.search_text.trim()) ? m.search_text : base;
-  return normalize(st);
-}
-function scoreMatch(q, m) {
-  const st = buildSearchText(m);
-  if (!q) return 0;
-
-  // Strongest: exact/prefix ID match
-  if (m.full_id && m.full_id.startsWith(q)) return 2000;
-
-  // Next: prefix match on client name / matter desc tokens
-  const client = normalize(m.client_name || "");
-  const matter = normalize(m.matter_desc || "");
-  if (client.startsWith(q)) return 1200;
-  if (matter.startsWith(q)) return 1100;
-
-  // Contains match
-  if (st.includes(q)) return 700;
-
-  // Token scoring
-  const toks = q.split(" ").filter(Boolean);
-  let s = 0;
-  for (const t of toks) {
-    if (t.length < 2) continue;
-    if (m.full_id && m.full_id.includes(t)) s += 120;
-    if (client.includes(t)) s += 90;
-    if (matter.includes(t)) s += 80;
-    if (st.includes(t)) s += 40;
-  }
-  return s;
-}
-
-let debounceTimer = null;
-matterSearch.addEventListener("input", () => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(runSearch, 120);
-});
-function runSearch() {
-  const q = normalize(matterSearch.value);
-  if (q.length < 2 || matters.length === 0) {
-    dropdown.style.display = "none";
-    dropdown.innerHTML = "";
-    return;
-  }
-
-  const hits = matters
-    .map(m => ({ m, s: scoreMatch(q, m) }))
-    .filter(x => x.s > 0)
-    .sort((a,b) => b.s - a.s)
-    .slice(0, 12)
-    .map(x => x.m);
-
-  renderDropdown(hits);
-}
-function renderDropdown(list) {
-  dropdown.innerHTML = "";
-  if (!list.length) { dropdown.style.display = "none"; return; }
-
-  for (const m of list) {
-    const div = document.createElement("div");
-    div.className = "opt";
-    div.innerHTML = `
-      <div class="top">${escapeHTML(m.client_name || "—")}</div>
-      <div class="mid">${escapeHTML(m.matter_desc || "—")}</div>
-      <div class="bot">
-        <span class="chip mono">${escapeHTML(m.full_id)}</span>
-        <span>${escapeHTML((m.client_id || "") + (m.matter_id ? ("." + m.matter_id) : ""))}</span>
-      </div>
-    `;
-    div.addEventListener("mousedown", (e) => { e.preventDefault(); selectMatter(m); });
-    div.addEventListener("click", () => selectMatter(m));
-    dropdown.appendChild(div);
-  }
-  dropdown.style.display = "block";
-}
-function selectMatter(m) {
-  selectedFullId.value = m.full_id;
-  selectedLine.textContent = `${m.full_id} — ${m.client_name || ""} — ${m.matter_desc || ""}`;
-  dropdown.style.display = "none";
-  dropdown.innerHTML = "";
-  matterSearch.value = "";
-
-  // recents
-  recents = [m.full_id, ...recents.filter(x => x !== m.full_id)].slice(0, 18);
-  saveJSON(LS.recents, recents);
-  renderRecentsAndFavorites();
-}
-function clearSelection() {
-  selectedFullId.value = "";
-  selectedLine.textContent = matters.length ? "None" : "None (import matters first)";
-}
-clearSel.addEventListener("click", clearSelection);
-
-document.addEventListener("click", (e) => {
-  if (!dropdown.contains(e.target) && e.target !== matterSearch) dropdown.style.display = "none";
-});
-
-/* -----------------------------
-   Recents / Favorites
---------------------------------*/
-function fullIdToLabel(fullId) {
-  const m = matters.find(x => x.full_id === fullId);
-  if (!m) return fullId;
-  return `${m.full_id} — ${m.client_name || ""} — ${m.matter_desc || ""}`;
-}
-function renderRecentsAndFavorites() {
-  recentsSelect.innerHTML = "";
-  favoritesSelect.innerHTML = "";
-
-  const r0 = document.createElement("option");
-  r0.value = "";
-  r0.textContent = matters.length ? "Select a recent…" : "Import matters first…";
-  recentsSelect.appendChild(r0);
-  for (const id of recents) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = fullIdToLabel(id);
-    recentsSelect.appendChild(o);
-  }
-
-  const f0 = document.createElement("option");
-  f0.value = "";
-  f0.textContent = favorites.length ? "Select a favorite…" : "No favorites yet";
-  favoritesSelect.appendChild(f0);
-  for (const id of favorites) {
-    const o = document.createElement("option");
-    o.value = id;
-    o.textContent = fullIdToLabel(id);
-    favoritesSelect.appendChild(o);
-  }
-}
-recentsSelect.addEventListener("change", () => {
-  const id = recentsSelect.value;
-  if (!id) return;
-  const m = matters.find(x => x.full_id === id);
-  if (m) selectMatter(m);
-  recentsSelect.value = "";
-});
-favoritesSelect.addEventListener("change", () => {
-  const id = favoritesSelect.value;
-  if (!id) return;
-  const m = matters.find(x => x.full_id === id);
-  if (m) selectMatter(m);
-  favoritesSelect.value = "";
-});
-addFav.addEventListener("click", () => {
-  const id = selectedFullId.value;
-  if (!id) return alert("Select a matter first.");
-  favorites = [id, ...favorites.filter(x => x !== id)].slice(0, 40);
-  saveJSON(LS.favorites, favorites);
-  renderRecentsAndFavorites();
-});
-
-/* -----------------------------
-   Dictation-friendly UX
---------------------------------*/
-focusDesc.addEventListener("click", () => {
-  desc.focus();
-  desc.scrollIntoView({ behavior: "smooth", block: "center" });
-});
-
-/* -----------------------------
-   Entries
---------------------------------*/
-function addEntry(dateISO, matterId, description, hrs) {
-  const m = matters.find(x => x.full_id === matterId);
-  const item = {
-    id: cryptoId(),
-    date: dateISO,
-    timekeeper: safeTK(),
-    matter_full_id: matterId,
-    client_name: m?.client_name || "",
-    matter_desc: m?.matter_desc || "",
-    hours: Number(hrs),
-    description: (description || "").trim(),
-    created_at: Date.now()
-  };
-  entries.unshift(item);
-}
-function validateAdd() {
-  const id = selectedFullId.value;
-  const d = (desc.value || "").trim();
-  const h = (hours.value || "").toString().trim();
-  const dt = workDate.value || todayISO();
-
-  if (!id) return "Select a Client/Matter first.";
-  if (!d) return "Add a description.";
-  if (!h || isNaN(Number(h)) || Number(h) <= 0) return "Enter hours (e.g., 0.3).";
-  if (!dt) return "Pick a date.";
-  return null;
-}
-addEntryBtn.addEventListener("click", () => {
-  const err = validateAdd();
-  if (err) return alert(err);
-
-  addEntry(workDate.value, selectedFullId.value, desc.value, hours.value);
-  saveJSON(LS.entries, entries);
-
-  desc.value = "";
-  hours.value = "";
-  desc.focus();
-
-  renderReview();
-  renderPills();
-});
-addPoint1.addEventListener("click", () => {
-  const cur = Number(hours.value || 0);
-  hours.value = (Math.round((cur + 0.1) * 10) / 10).toFixed(1);
-});
-
-/* Duplicate yesterday */
-dupYesterdayBtn.addEventListener("click", () => {
-  const t = todayISO();
-  const y = isoFromDate(new Date(new Date(t + "T12:00:00").getTime() - 86400000));
-  const yEntries = entries.filter(e => e.date === y);
-
-  if (!yEntries.length) return alert("No entries found for yesterday.");
-  if (!confirm(`Duplicate ${yEntries.length} entries from ${y} to ${t}?`)) return;
-
-  // Duplicate in same order (oldest to newest) so they land sensibly
-  const ordered = [...yEntries].sort((a,b) => (a.created_at||0) - (b.created_at||0));
-  for (const e of ordered) {
-    addEntry(t, e.matter_full_id, e.description, e.hours);
-  }
-  saveJSON(LS.entries, entries);
-
-  workDate.value = t;
-  renderReview();
-  renderPills();
-});
-
-/* Edit/Delete */
-window.deleteEntry = function(id) {
-  entries = entries.filter(e => e.id !== id);
-  saveJSON(LS.entries, entries);
-  renderReview();
-  renderPills();
-};
-window.editEntry = function(id) {
-  const e = entries.find(x => x.id === id);
-  if (!e) return;
-
-  const newDesc = prompt("Edit description:", e.description);
-  if (newDesc === null) return;
-
-  const newHours = prompt("Edit hours:", String(e.hours));
-  if (newHours === null) return;
-
-  const h = Number(newHours);
-  if (!newDesc.trim()) return alert("Description required.");
-  if (!h || isNaN(h) || h <= 0) return alert("Hours must be a number > 0.");
-
-  e.description = newDesc.trim();
-  e.hours = h;
-  saveJSON(LS.entries, entries);
-  renderReview();
-  renderPills();
-};
-
-/* -----------------------------
-   Review + totals (daily + weekly)
---------------------------------*/
-reviewDate.addEventListener("change", () => { renderReview(); renderPills(); });
-
-function renderReview() {
-  const dt = reviewDate.value || todayISO();
-  const list = entries.filter(e => e.date === dt);
-
-  // daily totals
-  let total = 0;
-  for (const e of list) total += Number(e.hours || 0);
-  totalHours.value = total.toFixed(1);
-  totalEntries.textContent = String(list.length);
-
-  // weekly totals Mon-Sun
-  const mon = mondayOf(dt);
-  const sun = new Date(mon); sun.setDate(mon.getDate() + 6);
-  const monISO = isoFromDate(mon);
-  const sunISO = isoFromDate(sun);
-  weekRange.textContent = `${monISO} to ${sunISO}`;
-
-  const wList = entries.filter(e => e.date >= monISO && e.date <= sunISO);
-  let wTotal = 0;
-  for (const e of wList) wTotal += Number(e.hours || 0);
-  weekHours.value = wTotal.toFixed(1);
-
-  // list UI
-  entriesList.innerHTML = "";
-  if (!list.length) {
-    entriesList.innerHTML = `<div class="small" style="margin-top:10px;">No entries for ${escapeHTML(dt)}.</div>`;
-    return;
-  }
-
-  for (const e of list) {
-    const div = document.createElement("div");
-    div.className = "entry";
-    div.innerHTML = `
-      <div class="meta">
-        <div class="badges">
-          <span class="badge mono"><b>${escapeHTML(e.matter_full_id)}</b></span>
-          <span class="badge">${escapeHTML(Number(e.hours).toFixed(1))} hrs</span>
-          <span class="badge">TK ${escapeHTML(e.timekeeper || safeTK())}</span>
-        </div>
-        <div class="small">${escapeHTML(e.client_name)} — ${escapeHTML(e.matter_desc)}</div>
-      </div>
-      <div class="desc">${escapeHTML(e.description)}</div>
-      <div class="actions">
-        <button class="btn secondary" onclick="editEntry('${e.id}')">Edit</button>
-        <button class="btn danger" onclick="deleteEntry('${e.id}')">Delete</button>
-      </div>
-    `;
-    entriesList.appendChild(div);
-  }
-}
-
-function renderPills() {
-  const t = todayISO();
-  const list = entries.filter(e => e.date === t);
-  let total = 0;
-  for (const e of list) total += Number(e.hours || 0);
-  countsPill.textContent = `${list.length} today`;
-  hoursPill.textContent = `${total.toFixed(1)} hrs`;
-}
-
-/* -----------------------------
-   CSV Export
---------------------------------*/
-function headerForPreset(preset) {
-  if (preset === "simple") return "Date,Timekeeper,Matter,Hours,Description";
-  if (preset === "tabs3like") return "Date,Timekeeper,ClientMatterID,Hours,Narrative";
-  return (customHeader.value || "").trim() || "Date,Timekeeper,Matter,Hours,Description";
-}
-function exportList(list, filename) {
-  if (!list.length) return alert("No entries to export.");
-
-  const header = headerForPreset(exportPreset.value);
-  let csv = header + "\n";
-
-  // Always output 5 fields in this exact order:
-  // Date, Timekeeper, MatterID, Hours, Description
-  for (const e of list) {
-    const tk = (e.timekeeper || safeTK() || "70");
-    const line = [
-      e.date,
-      tk,
-      e.matter_full_id,
-      Number(e.hours).toFixed(1),
-      csvQuote(e.description)
-    ].join(",");
-    csv += line + "\n";
-  }
-
-  const blob = new Blob([csv], { type:"text/csv;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-exportDay.addEventListener("click", () => {
-  const t = todayISO();
-  const list = entries.filter(e => e.date === t);
-  exportList(list, `tabs3_${t}.csv`);
-});
-exportReview.addEventListener("click", () => {
-  const dt = reviewDate.value || todayISO();
-  const list = entries.filter(e => e.date === dt);
-  exportList(list, `tabs3_${dt}.csv`);
-});
-exportRangeBtn.addEventListener("click", () => {
-  const start = prompt("Start date (YYYY-MM-DD):", todayISO());
-  if (!start) return;
-  const end = prompt("End date (YYYY-MM-DD):", todayISO());
-  if (!end) return;
-
-  const list = entries.filter(e => e.date >= start && e.date <= end);
-  exportList(list, `tabs3_${start}_to_${end}.csv`);
-});
-
-/* -----------------------------
-   Backup / Restore
---------------------------------*/
-backupBtn.addEventListener("click", () => {
-  const payload = {
-    version: 2,
-    exported_at: new Date().toISOString(),
-    matters, entries, recents, favorites, settings
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type:"application/json" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `tabs3_backup_${todayISO()}.json`;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-});
-
-restoreFile.addEventListener("change", async () => {
-  const file = restoreFile.files && restoreFile.files[0];
-  if (!file) return;
-  try {
-    const text = await file.text();
-    const obj = JSON.parse(text);
-
-    if (!obj || typeof obj !== "object") throw new Error("Invalid JSON");
-    if (!confirm("Restore will overwrite current data on this device/browser. Continue?")) return;
-
-    matters = Array.isArray(obj.matters) ? obj.matters : [];
-    entries = Array.isArray(obj.entries) ? obj.entries : [];
-    recents = Array.isArray(obj.recents) ? obj.recents : [];
-    favorites = Array.isArray(obj.favorites) ? obj.favorites : [];
-    settings = (obj.settings && typeof obj.settings === "object") ? obj.settings : { timekeeper:"70" };
-
-    saveJSON(LS.matters, matters);
-    saveJSON(LS.entries, entries);
-    saveJSON(LS.recents, recents);
-    saveJSON(LS.favorites, favorites);
-    saveJSON(LS.settings, settings);
-
-    renderSettings();
-    renderRecentsAndFavorites();
-    renderReview();
-    renderPills();
-    alert("Restore complete.");
-  } catch (e) {
-    alert("Could not restore. Make sure it’s a valid backup JSON file.");
-  } finally {
-    restoreFile.value = "";
-  }
-});
-
-/* -----------------------------
-   CSV Import (matters)
---------------------------------*/
-csvFile.addEventListener("change", async () => {
-  const file = csvFile.files && csvFile.files[0];
-  if (!file) return;
-
-  const text = await file.text();
-  const parsed = parseCSV(text);
-  if (!parsed.rows.length) return alert("Could not read CSV rows.");
-
-  const headers = parsed.headers.map(h => normalize(h));
-  const idx = (names) => {
-    for (const n of names) {
-      const i = headers.indexOf(normalize(n));
-      if (i >= 0) return i;
-    }
-    return -1;
-  };
-
-  const idI = idx(["client id","clientid","id","matter id","matterid","tabs3 id","clientmatterid"]);
-  const clientNameI = idx(["client name","client","clientname"]);
-  const matterDescI = idx(["matter","matter description","matterdesc","description","matter desc"]);
-
-  if (idI < 0) return alert('CSV must contain a "Client ID" column with full IDs like 11015.0001.');
-
-  const newMatters = [];
-  for (const r of parsed.rows) {
-    const full_id = (r[idI] || "").trim();
-    if (!full_id || !full_id.includes(".")) continue;
-
-    const parts = full_id.split(".");
-    const client_id = parts[0] || "";
-    const matter_id = parts[1] || "";
-
-    const client_name = clientNameI >= 0 ? (r[clientNameI] || "").trim() : "";
-    const matter_desc = matterDescI >= 0 ? (r[matterDescI] || "").trim() : "";
-
-    // Search text: include abbreviations if you want later by editing this line (e.g., add "pmg" etc.)
-    const search_text = normalize(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`);
-    newMatters.push({ full_id, client_id, matter_id, client_name, matter_desc, search_text });
-  }
-
-  if (!newMatters.length) return alert("No valid rows found (need full IDs like 11015.0001).");
-
-  matters = newMatters;
-  saveJSON(LS.matters, matters);
-
-  // Don’t wipe recents/favorites, but they won’t label nicely if IDs changed
-  renderRecentsAndFavorites();
-  selectedLine.textContent = "None";
-  alert(`Imported ${matters.length} matters.`);
-});
-
-/* -----------------------------
-   Clear all
---------------------------------*/
-clearAll.addEventListener("click", () => {
-  if (!confirm("Clear ALL entries? This cannot be undone (use Backup first if you want).")) return;
-  entries = [];
-  saveJSON(LS.entries, entries);
-  renderReview();
-  renderPills();
-});
-
-/* -----------------------------
-   Tiny CSV parser
---------------------------------*/
-function parseCSV(text) {
-  const rows = [];
-  let cur = [];
-  let val = "";
-  let inQuotes = false;
-
-  for (let i=0; i<text.length; i++) {
-    const c = text[i];
-    const next = text[i+1];
-
-    if (inQuotes) {
-      if (c === '"' && next === '"') { val += '"'; i++; }
-      else if (c === '"') inQuotes = false;
-      else val += c;
-    } else {
-      if (c === '"') inQuotes = true;
-      else if (c === ",") { cur.push(val); val=""; }
-      else if (c === "\n") { cur.push(val); rows.push(cur); cur=[]; val=""; }
-      else if (c === "\r") { /* skip */ }
-      else val += c;
-    }
-  }
-  cur.push(val);
-  if (cur.length > 1 || cur[0].trim() !== "") rows.push(cur);
-
-  const headers = (rows.shift() || []).map(h => (h || "").trim());
-  return { headers, rows };
-}
-
-/* -----------------------------
-   Boot
---------------------------------*/
-function boot() {
-  initDates();
-  if (!settings || typeof settings !== "object") settings = { timekeeper:"70" };
-  if (!settings.timekeeper) settings.timekeeper = "70";
-  saveJSON(LS.settings, settings);
-
-  renderSettings();
-  renderRecentsAndFavorites();
-  renderReview();
-  renderPills();
-
-  // nice defaults
-  customHeader.value = "Date,Timekeeper,Matter,Hours,Description";
-  workDate.value = workDate.value || todayISO();
-  reviewDate.value = reviewDate.value || todayISO();
-}
-boot();
+const LS={matters:"tabs3_matters_v2",entries:"tabs3_entries_v2",recents:"tabs3_recents_v2",favorites:"tabs3_favorites_v2",settings:"tabs3_settings_v2",user:"tabs3_user_v1",jb:"tabs3_jb_v1",auth:"tabs3_auth_v1"};
+const FIRM_PW="MCWtime";
+const $=id=>document.getElementById(id);
+function loadJ(k,fb){try{return JSON.parse(localStorage.getItem(k)||"")??fb;}catch{return fb;}}
+function saveJ(k,v){localStorage.setItem(k,JSON.stringify(v));}
+function todayISO(){const d=new Date();return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function norm(s){return(s||"").toLowerCase().replace(/[^\w\s.\-]/g," ").replace(/\s+/g," ").trim();}
+function esc(s){return(s??"").toString().replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");}
+function csvQ(s){return`"${(s??"").toString().replace(/"/g,'""')}"}`;}
+function uid(){return crypto?.randomUUID?.()??(Date.now()+"_"+Math.random().toString(16).slice(2));}
+function monISO(iso){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()-(d.getDay()===0?6:d.getDay()-1));return isoFrom(d);}
+function isoFrom(d){return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
+function closeModal(id){$(id).classList.add("hidden");}
+function openModal(id){$(id).classList.remove("hidden");}
+let matters=loadJ(LS.matters,[]);
+let entries=loadJ(LS.entries,[]);
+let recents=loadJ(LS.recents,[]);
+let favorites=loadJ(LS.favorites,[]);
+let settings=loadJ(LS.settings,{timekeeper:"70"});
+let user=loadJ(LS.user,null);
+let jb=loadJ(LS.jb,null);
+function submitPW(){if($("pwInput").value===FIRM_PW){saveJ(LS.auth,"ok");closeModal("pwModal");onAuth();}else{$("pwErr").style.display="block";$("pwInput").value="";$("pwInput").focus();}}
+$("pwInput").addEventListener("keydown",e=>{if(e.key==="Enter")submitPW();});
+function checkAuth(){if(loadJ(LS.auth,null)==="ok"){closeModal("pwModal");onAuth();}}
+function onAuth(){if(!user?.name)openModal("setupModal");else boot();}
+function saveProfile(){const name=($("setupName").value||"").trim();const tk=($("setupTK").value||"").trim()||"70";if(!name){alert("Please enter your name.");return;}user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("setupModal");boot();}
+$("setupTK").addEventListener("keydown",e=>{if(e.key==="Enter")saveProfile();});
+function openEditProfile(){$("editName").value=user?.name||"";$("editTK").value=user?.timekeeper||"70";openModal("editModal");}
+function saveEditProfile(){const name=($("editName").value||"").trim();const tk=($("editTK").value||"").trim()||"70";if(!name){alert("Name required.");return;}user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("editModal");renderHeader();}
+function safeTK(){const r=(user?.timekeeper||settings?.timekeeper||"70").toString();const m=r.match(/(\d+)/);return m?m[1]:"70";}
+function renderHeader(){$("pillName").textContent=user?.name||"Set profile";$("pillTK").textContent=safeTK();}
+function showTab(name){document.querySelectorAll(".tcontent").forEach(e=>e.classList.remove("active"));document.querySelectorAll(".tbtn").forEach(e=>e.classList.remove("active"));$("t-"+name).classList.add("active");document.querySelector(`[onclick="showTab('${name}')"]`).classList.add("active");if(name==="review")renderReview();if(name==="settings")renderSettingsUI();}
+function initDates(){const t=todayISO();if(!$("workDate").value||$("workDate").value<t)$("workDate").value=t;if(!$("reviewDate").value)$("reviewDate").value=t;}
+setInterval(()=>{const t=todayISO();if($("workDate").value<t)$("workDate").value=t;},60000);
+function score(q,m){if(!q)return 0;const st=norm(`${m.full_id} ${m.client_id||""} ${m.matter_id||""} ${m.client_name||""} ${m.matter_desc||""}`);if(m.full_id?.startsWith(q))return 2000;const cn=norm(m.client_name||""),md=norm(m.matter_desc||"");if(cn.startsWith(q))return 1200;if(md.startsWith(q))return 1100;if(st.includes(q))return 700;let s=0;for(const t of q.split(" ").filter(t=>t.length>=2)){if(m.full_id?.includes(t))s+=120;if(cn.includes(t))s+=90;if(md.includes(t))s+=80;else if(st.includes(t))s+=40;}return s;}
+let dbt=null;
+$("mSearch").addEventListener("input",()=>{clearTimeout(dbt);dbt=setTimeout(runSearch,100);});
+function runSearch(){const q=norm($("mSearch").value),dd=$("dd");if(!q||!matters.length){dd.style.display="none";return;}const hits=matters.map(m=>({m,s:score(q,m)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,8);if(!hits.length){dd.style.display="none";return;}dd.innerHTML=hits.map(({m})=>`<div class="opt" onclick="pickM('${esc(m.full_id)}')" ontouchend="pickM('${esc(m.full_id)}')"><div class="otop mono">${esc(m.full_id)}</div><div class="omid">${esc(m.client_name)}</div><div class="obot">${esc(m.matter_desc)}</div></div>`).join("");dd.style.display="block";}
+function pickM(id){const m=matters.find(x=>x.full_id===id);if(m){selM(m);$("dd").style.display="none";$("mSearch").value="";}}
+function selM(m){$("selId").value=m.full_id;$("selLine").textContent=`${m.full_id} · ${m.client_name} — ${m.matter_desc}`;recents=[m.full_id,...recents.filter(x=>x!==m.full_id)].slice(0,20);saveJ(LS.recents,recents);renderRF();}
+function idLabel(id){const m=matters.find(x=>x.full_id===id);return m?`${id} · ${m.client_name} — ${m.matter_desc}`:id;}
+document.addEventListener("click",e=>{if(!e.target.closest(".swrap"))$("dd").style.display="none";});
+function renderRF(){const rs=$("recents"),fs=$("favorites");rs.innerHTML="";fs.innerHTML="";const ro=new Option(matters.length?"Select a recent…":"Import matters first","");rs.appendChild(ro);recents.forEach(id=>{rs.appendChild(new Option(idLabel(id),id));});const fo=new Option(favorites.length?"Select a favorite…":"No favorites yet","");fs.appendChild(fo);favorites.forEach(id=>{fs.appendChild(new Option(idLabel(id),id));});}
+$("recents").addEventListener("change",function(){const m=matters.find(x=>x.full_id===this.value);if(m){selM(m);this.value="";}});
+$("favorites").addEventListener("change",function(){const m=matters.find(x=>x.full_id===this.value);if(m){selM(m);this.value="";}});
+$("addFavBtn").addEventListener("click",()=>{const id=$("selId").value;if(!id)return alert("Select a matter first.");favorites=[id,...favorites.filter(x=>x!==id)].slice(0,40);saveJ(LS.favorites,favorites);renderRF();});
+$("clearSelBtn").addEventListener("click",()=>{$("selId").value="";$("selLine").textContent="None";});
+$("focusDescBtn").addEventListener("click",()=>{$("desc").focus();$("desc").scrollIntoView({behavior:"smooth",block:"center"});});
+function addH(n){$("hours").value=(Math.round((Number($("hours").value||0)+n)*10)/10).toFixed(1);}
+function mkEntry(date,matterId,desc,hrs){const m=matters.find(x=>x.full_id===matterId);entries.unshift({id:uid(),date,timekeeper:safeTK(),user_name:user?.name||"",matter_full_id:matterId,client_name:m?.client_name||"",matter_desc:m?.matter_desc||"",hours:Number(hrs),description:(desc||"").trim(),created_at:Date.now()});}
+$("addBtn").addEventListener("click",()=>{const id=$("selId").value,d=($("desc").value||"").trim(),h=$("hours").value,dt=$("workDate").value||todayISO();if(!id)return alert("Select a Client/Matter first.");if(!d)return alert("Add a description.");if(!h||Number(h)<=0)return alert("Enter valid hours (e.g. 0.3).");mkEntry(dt,id,d,h);saveJ(LS.entries,entries);$("desc").value="";$("hours").value="";$("desc").focus();renderPills();});
+$("dupBtn").addEventListener("click",()=>{const t=todayISO(),y=isoFrom(new Date(new Date(t+"T12:00:00").getTime()-86400000));const ye=entries.filter(e=>e.date===y);if(!ye.length)return alert("No entries for yesterday.");if(!confirm(`Duplicate ${ye.length} entries from ${y} to today?`))return;[...ye].sort((a,b)=>(a.created_at||0)-(b.created_at||0)).forEach(e=>mkEntry(t,e.matter_full_id,e.description,e.hours));saveJ(LS.entries,entries);$("workDate").value=t;renderPills();});
+window.delEntry=function(id){if(!confirm("Delete this entry?"))return;entries=entries.filter(e=>e.id!==id);saveJ(LS.entries,entries);renderReview();renderPills();};
+window.editEntry=function(id){const e=entries.find(x=>x.id===id);if(!e)return;const nd=prompt("Edit description:",e.description);if(nd===null)return;const nh=prompt("Edit hours:",String(e.hours));if(nh===null)return;const h=Number(nh);if(!nd.trim())return alert("Description required.");if(!h||isNaN(h)||h<=0)return alert("Hours must be > 0.");e.description=nd.trim();e.hours=h;saveJ(LS.entries,entries);renderReview();renderPills();};
+$("reviewDate").addEventListener("change",()=>{renderReview();renderPills();});
+function renderReview(){const dt=$("reviewDate").value||todayISO(),list=entries.filter(e=>e.date===dt);let tot=0;list.forEach(e=>tot+=Number(e.hours||0));$("totalHours").value=tot.toFixed(1);$("totalEntries").textContent=list.length;const mon=monISO(dt),sun=isoFrom(new Date(new Date(mon+"T12:00:00").getTime()+6*86400000));$("weekRange").textContent=`${mon} → ${sun}`;let wt=0;entries.filter(e=>e.date>=mon&&e.date<=sun).forEach(e=>wt+=Number(e.hours||0));$("weekHours").value=wt.toFixed(1);const el=$("entriesList");if(!list.length){el.innerHTML=`<div class="small" style="text-align:center;padding:20px;">No entries for ${esc(dt)}.</div>`;return;}el.innerHTML="";for(const e of list){const d=document.createElement("div");d.className="entry";d.innerHTML=`<div class="emeta"><div class="badges"><span class="badge mono"><b>${esc(e.matter_full_id)}</b></span><span class="badge">${Number(e.hours).toFixed(1)} hrs</span><span class="badge">TK ${esc(e.timekeeper||safeTK())}</span>${e.user_name?`<span class="badge ubadge">👤 ${esc(e.user_name)}</span>`:""}</div><div class="small">${esc(e.client_name)} — ${esc(e.matter_desc)}</div></div><div class="edesc">${esc(e.description)}</div><div class="eactions"><button class="btn sec" onclick="editEntry('${e.id}')">✏️ Edit</button><button class="btn danger" onclick="delEntry('${e.id}')">🗑 Delete</button></div>`;el.appendChild(d);}}
+function renderPills(){const t=todayISO(),list=entries.filter(e=>e.date===t);let tot=0;list.forEach(e=>tot+=Number(e.hours||0));$("pillCount").textContent=`${list.length} today`;$("pillHours").textContent=`${tot.toFixed(1)} hrs`;}
+$("clearAllBtn").addEventListener("click",()=>{if(!confirm("Clear ALL entries on this device? Back up first!"))return;entries=[];saveJ(LS.entries,entries);renderReview();renderPills();});
+function updateListBar(){const bar=$("listBar"),txt=$("listBarText");bar.style.display="flex";if(!matters.length){bar.className="sbar warn";txt.textContent="No client list loaded — import one in Settings.";}else{bar.className="sbar ok";txt.textContent=`${matters.length} client/matter records loaded.`;}}
+const JB="https://api.jsonbin.io/v3";
+function jbHdr(k){return{"Content-Type":"application/json","X-Master-Key":k};}
+async function createBin(){const k=($("jbKey").value||"").trim();if(!k)return alert("Paste your JSONBin Master Key first.");try{setSyncBar("warn","Creating bin…");const r=await fetch(`${JB}/b`,{method:"POST",headers:{...jbHdr(k),"X-Bin-Name":"Tabs3-Matters","X-Bin-Private":"true"},body:JSON.stringify({matters:[],created:new Date().toISOString()})});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);const binId=d.metadata?.id;$("jbBin").value=binId;jb={apiKey:k,binId};saveJ(LS.jb,jb);setSyncBar("ok",`✅ Bin created! ID: ${binId} — Now import file and click Sync.`);}catch(e){setSyncBar("err","Error: "+e.message);}}
+async function saveJBSettings(){const k=($("jbKey").value||"").trim(),b=($("jbBin").value||"").trim();if(!k||!b)return alert("Enter both Master Key and Bin ID.");jb={apiKey:k,binId:b};saveJ(LS.jb,jb);setSyncBar("ok","Keys saved. Fetching shared list…");await syncDown(true);}
+async function syncUp(){if(!jb?.apiKey||!jb?.binId)return alert("Configure JSONBin first (Settings tab).");if(!matters.length)return alert("Import a file first — nothing to sync.");try{setSyncBar("warn","Syncing…");const r=await fetch(`${JB}/b/${jb.binId}`,{method:"PUT",headers:jbHdr(jb.apiKey),body:JSON.stringify({matters,synced:new Date().toISOString()})});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);setSyncBar("ok",`✅ Synced ${matters.length} records. All users will get this on next load.`);}catch(e){setSyncBar("err","Sync failed: "+e.message);}}
+async function syncDown(manual=false){if(!jb?.apiKey||!jb?.binId){if(manual)setSyncBar("warn","JSONBin not configured yet.");return;}try{if(manual)setSyncBar("warn","Fetching…");const r=await fetch(`${JB}/b/${jb.binId}/latest`,{headers:{"X-Master-Key":jb.apiKey}});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);const fetched=d.record?.matters;if(!Array.isArray(fetched)||!fetched.length){if(manual)setSyncBar("warn","Bin empty — import file and sync first.");return;}matters=fetched;saveJ(LS.matters,matters);renderRF();updateListBar();setSyncBar("ok",`✅ ${matters.length} records loaded from shared list.`);}catch(e){if(manual)setSyncBar("err","Fetch failed: "+e.message);}}
+function setSyncBar(t,msg){const bar=$("syncBar");bar.style.display="flex";bar.className=`sbar ${t}`;$("syncBarText").textContent=msg;}
+function toggleHelp(){const h=$("helpBox");h.style.display=h.style.display==="none"?"block":"none";}
+function renderSettingsUI(){if(jb?.apiKey)$("jbKey").value=jb.apiKey;if(jb?.binId)$("jbBin").value=jb.binId;setSyncBar(jb?.apiKey?"ok":"warn",jb?.apiKey?`Connected · Bin: ${jb.binId}`:"Not configured — set up JSONBin to share firm-wide.");}
+$("csvFile").addEventListener("change",async function(){const file=this.files?.[0];if(!file)return;const text=await file.text(),parsed=parseCSV(text);if(!parsed.rows.length)return alert("Could not read file.");const hdrs=parsed.headers.map(h=>norm(h));const idx=(...ns)=>{for(const n of ns){const i=hdrs.indexOf(norm(n));if(i>=0)return i;}return -1;};const idI=idx("client id","clientid","id","matter id","matterid","tabs3 id","clientmatterid");const cnI=idx("client name","client","clientname","name");const mdI=idx("matter","matter description","matterdesc","description","matter desc");if(idI<0)return alert('File must have a "Client ID" column like 11015.0001.');const nm=[];for(const r of parsed.rows){const full_id=(r[idI]||"").trim();if(!full_id||!full_id.includes("."))continue;const[client_id,matter_id]=full_id.split(".");const client_name=cnI>=0?(r[cnI]||"").trim():"";const matter_desc=mdI>=0?(r[mdI]||"").trim():"";nm.push({full_id,client_id,matter_id,client_name,matter_desc,search_text:norm(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`)});}if(!nm.length)return alert("No valid rows found.\n\nMake sure your file has a 'Client ID' column with IDs in the format 11015.0001 (with a dot separating client and matter numbers).");matters=nm;saveJ(LS.matters,matters);renderRF();updateListBar();$("importMsg").innerHTML=`<span style="color:var(--success);">✅ Imported ${matters.length} matters from ${file.name}.</span> Now click <strong>☁️ Sync to Shared</strong> above.`;this.value="";});
+function hdr(p){if(p==="tabs3like")return"Date,Timekeeper,ClientMatterID,Hours,Narrative";if(p==="simple")return"Date,Timekeeper,Matter,Hours,Description";return($("customHeader").value||"").trim()||"Date,Timekeeper,Matter,Hours,Description";}
+function doExport(list,fname){if(!list.length)return alert("No entries to export.");let csv=hdr($("exportPreset").value)+"\n";for(const e of list)csv+=[e.date,e.timekeeper||safeTK(),e.matter_full_id,Number(e.hours).toFixed(1),csvQ(e.description)].join(",")+"\n";const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+$("exportDay").addEventListener("click",()=>doExport(entries.filter(e=>e.date===todayISO()),`tabs3_${todayISO()}.csv`));
+$("exportReview").addEventListener("click",()=>{const dt=$("reviewDate").value||todayISO();doExport(entries.filter(e=>e.date===dt),`tabs3_${dt}.csv`);});
+$("exportRange").addEventListener("click",()=>{const s=prompt("Start date (YYYY-MM-DD):",todayISO());if(!s)return;const e=prompt("End date (YYYY-MM-DD):",todayISO());if(!e)return;doExport(entries.filter(x=>x.date>=s&&x.date<=e),`tabs3_${s}_to_${e}.csv`);});
+$("backupBtn").addEventListener("click",()=>{const p={version:3,exported_at:new Date().toISOString(),user,matters,entries,recents,favorites,settings};const blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`tabs3_${(user?.name||"user").replace(/\s/g,"_")}_${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);});
+$("restoreFile").addEventListener("change",async function(){const file=this.files?.[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Restore will overwrite your data. Continue?"))return;if(Array.isArray(obj.matters)){matters=obj.matters;saveJ(LS.matters,matters);}if(Array.isArray(obj.entries)){entries=obj.entries;saveJ(LS.entries,entries);}if(Array.isArray(obj.recents)){recents=obj.recents;saveJ(LS.recents,recents);}if(Array.isArray(obj.favorites)){favorites=obj.favorites;saveJ(LS.favorites,favorites);}if(obj.settings){settings=obj.settings;saveJ(LS.settings,settings);}if(obj.user){user=obj.user;saveJ(LS.user,user);renderHeader();}renderRF();renderReview();renderPills();updateListBar();alert("Restore complete.");}catch{alert("Could not restore file.");}finally{this.value="";}});
+function parseCSV(text){const firstLine=text.split('\n')[0]||"";const delim=(firstLine.split('\t').length>firstLine.split(',').length)?'\t':',';const rows=[];let cur=[],val="",inQ=false;for(let i=0;i<text.length;i++){const c=text[i],nx=text[i+1];if(inQ){if(c==='"'&&nx==='"'){val+='"';i++;}else if(c==='"')inQ=false;else val+=c;}else{if(c==='"')inQ=true;else if(c===delim){cur.push(val);val="";}else if(c==='\n'){cur.push(val);rows.push(cur);cur=[];val="";}else if(c!=='\r')val+=c;}}cur.push(val);if(cur.length>1||cur[0].trim())rows.push(cur);const headers=(rows.shift()||[]).map(h=>(h||"").trim());return{headers,rows};}
+function boot(){initDates();renderHeader();renderRF();renderReview();renderPills();updateListBar();$("customHeader").value="Date,Timekeeper,Matter,Hours,Description";syncDown(false);}
+checkAuth();
 </script>
-
 </body>
 </html>
