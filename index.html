@@ -421,7 +421,7 @@ function parseMattersText(text){
 
 async function loadMattersFromRepo(){
   try{
-    const res=await fetch("./matters.csv",{cache:"no-store"});
+    const res=await fetch("./Matters.csv",{cache:"no-store"});
     if(!res.ok)throw new Error("not found");
     const text=await res.text();
     const nm=parseMattersText(text);
@@ -686,4 +686,3 @@ checkAuth();
 </script>
 </body>
 </html>
-
