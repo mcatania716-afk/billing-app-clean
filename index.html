@@ -12,6 +12,8 @@
   }
   *{ box-sizing:border-box; }
   body{ margin:0; font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+
+  /* MODALS */
   .modal-overlay{ position:fixed; inset:0; background:rgba(10,15,30,.55); backdrop-filter:blur(4px); z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; }
   .modal-overlay.hidden{ display:none; }
   .modal{ background:#fff; border-radius:20px; padding:28px 24px; max-width:420px; width:100%; box-shadow:0 24px 60px rgba(10,20,50,.22); }
@@ -23,6 +25,8 @@
   .modal .mactions{ margin-top:20px; display:flex; gap:10px; }
   .modal .mactions button{ flex:1; }
   .hint-text{ font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
+
+  /* HEADER */
   header{ position:sticky; top:0; z-index:50; background:var(--brand); color:#fff; padding:12px 16px; box-shadow:0 2px 12px rgba(0,0,0,.18); }
   .hrow{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   header h1{ margin:0; font-size:15px; font-weight:800; }
@@ -31,6 +35,8 @@
   .pill b{ font-family:ui-monospace,monospace; }
   .pill.tap{ cursor:pointer; border:1px solid rgba(255,255,255,.3); }
   .pill.tap:hover,.pill.tap:active{ background:rgba(255,255,255,.28); }
+
+  /* LAYOUT */
   main{ max-width:980px; margin:0 auto; padding:14px 16px 120px; }
   .card{ background:var(--card); border-radius:14px; padding:14px; box-shadow:0 2px 12px rgba(15,25,40,.06); margin-bottom:12px; border:1px solid rgba(229,234,246,.7); }
   .ctitle{ font-size:12px; font-weight:900; color:var(--brand); text-transform:uppercase; letter-spacing:.5px; margin-bottom:10px; }
@@ -46,10 +52,11 @@
   .btn:active{ opacity:.85; }
   .btn.sec{ background:var(--soft); color:var(--brand); border:1px solid #d6ddff; }
   .btn.danger{ background:var(--danger); color:#fff; border:none; }
-  .btn.ok{ background:var(--success); color:#fff; border:none; }
   .small{ font-size:12px; color:var(--muted); line-height:1.4; }
   .divider{ height:1px; background:#eef1f8; margin:12px 0; }
   .mono{ font-family:ui-monospace,monospace; }
+
+  /* STATUS BARS */
   .sbar{ font-size:12px; padding:8px 12px; border-radius:10px; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
   .sbar.ok{ background:#e8f7ef; color:var(--success); border:1px solid #b2e4ca; }
   .sbar.warn{ background:#fef3e2; color:var(--warn); border:1px solid #fcd88a; }
@@ -58,14 +65,18 @@
   .sbar.ok .sdot{ background:var(--success); }
   .sbar.warn .sdot{ background:var(--warn); }
   .sbar.err .sdot{ background:var(--danger); }
+
+  /* SEARCH */
   .swrap{ position:relative; }
-  .dd{ position:absolute; left:0; right:0; top:calc(100%+6px); background:#fff; border:1px solid #d7deee; border-radius:14px; overflow:hidden; box-shadow:0 14px 36px rgba(20,30,55,.18); display:none; max-height:300px; overflow-y:auto; z-index:100; }
+  .dd{ position:absolute; left:0; right:0; top:calc(100% + 6px); background:#fff; border:1px solid #d7deee; border-radius:14px; overflow:hidden; box-shadow:0 14px 36px rgba(20,30,55,.18); display:none; max-height:300px; overflow-y:auto; z-index:100; }
   .opt{ padding:12px 14px; border-bottom:1px solid #f0f2f8; cursor:pointer; min-height:52px; }
   .opt:last-child{ border-bottom:none; }
   .opt:hover,.opt:active{ background:#f2f6ff; }
   .opt .otop{ font-weight:900; font-size:14px; }
   .opt .omid{ font-size:13px; color:#28324a; margin-top:2px; }
   .opt .obot{ font-size:12px; color:#667; margin-top:2px; }
+
+  /* ENTRIES */
   .entry{ border:1px solid var(--line); background:#fff; border-radius:14px; padding:12px; margin-top:10px; }
   .emeta{ display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; }
   .badges{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
@@ -74,22 +85,27 @@
   .edesc{ margin-top:8px; white-space:pre-wrap; font-size:14px; }
   .eactions{ margin-top:10px; display:flex; gap:8px; }
   .eactions button{ padding:10px; font-size:14px; border-radius:12px; }
+
+  /* FOOTER */
   footer{ position:fixed; left:0; right:0; bottom:0; background:rgba(244,246,251,.94); backdrop-filter:blur(10px); border-top:1px solid #e8ecf8; }
   footer .wrap{ max-width:980px; margin:0 auto; padding:10px 14px; display:flex; gap:8px; flex-wrap:wrap; }
   footer .wrap button{ border-radius:14px; flex:1; min-width:0; }
+
+  /* TABS */
   .tabs{ display:flex; gap:6px; margin-bottom:12px; flex-wrap:wrap; }
   .tbtn{ padding:9px 16px; border-radius:12px; border:1px solid #d7deee; background:var(--soft); color:var(--muted); font-weight:700; font-size:13px; cursor:pointer; width:auto; }
   .tbtn.active{ background:var(--brand); color:#fff; border-color:var(--brand); }
   .tcontent{ display:none; }
   .tcontent.active{ display:block; }
+
+  /* QUICK */
   .quick{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
   .quick button{ flex:none; width:auto; padding:8px 14px; font-size:14px; border-radius:10px; }
-  .helpbox{ background:#f0f4ff; border-radius:10px; padding:12px; margin-bottom:12px; display:none; }
-  .helpbox ol{ margin:4px 0 0; padding-left:18px; }
-  .helpbox li{ font-size:13px; line-height:2; color:var(--ink); }
 </style>
 </head>
 <body>
+
+<!-- PASSWORD MODAL -->
 <div id="pwModal" class="modal-overlay">
   <div class="modal">
     <h2>🔒 Firm Access</h2>
@@ -100,6 +116,8 @@
     <div class="mactions"><button class="btn" onclick="submitPW()">Unlock</button></div>
   </div>
 </div>
+
+<!-- USER SETUP MODAL -->
 <div id="setupModal" class="modal-overlay hidden">
   <div class="modal">
     <h2>👤 Your Profile</h2>
@@ -112,6 +130,8 @@
     <div class="mactions"><button class="btn" onclick="saveProfile()">Save & Continue</button></div>
   </div>
 </div>
+
+<!-- EDIT PROFILE MODAL -->
 <div id="editModal" class="modal-overlay hidden">
   <div class="modal">
     <h2>✏️ Edit Profile</h2>
@@ -126,6 +146,8 @@
     </div>
   </div>
 </div>
+
+<!-- HEADER -->
 <header>
   <div class="hrow">
     <h1>⚖️ Tabs3 Time Capture</h1>
@@ -138,20 +160,26 @@
     </div>
   </div>
 </header>
+
 <main>
 <div class="tabs">
   <button class="tbtn active" onclick="showTab('entry')">⏱ Enter Time</button>
   <button class="tbtn" onclick="showTab('review')">📋 Review</button>
   <button class="tbtn" onclick="showTab('settings')">⚙️ Settings</button>
 </div>
+
+<!-- TAB: ENTRY -->
 <div id="t-entry" class="tcontent active">
+
   <div class="card">
     <div class="ctitle">Client / Matter</div>
     <div id="listBar" class="sbar warn" style="display:none;"><div class="sdot"></div><span id="listBarText"></span></div>
+
     <div class="grid two" style="margin-bottom:10px;">
       <div><label>Recents</label><select id="recents"></select></div>
       <div><label>Favorites</label><select id="favorites"></select></div>
     </div>
+
     <label>Search / Dictate</label>
     <div class="swrap">
       <input id="mSearch" type="text" inputmode="text" autocomplete="off" autocapitalize="none"
@@ -159,6 +187,7 @@
         placeholder='Type name, matter, or ID… e.g. "PMG" or "11015"' />
       <div id="dd" class="dd"></div>
     </div>
+
     <div style="margin-top:10px;">
       <div class="small">Selected:</div>
       <div id="selLine" style="font-weight:900;font-size:15px;margin-top:4px;color:var(--brand);">None</div>
@@ -170,6 +199,7 @@
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="ctitle">Time Entry</div>
     <div class="grid two">
@@ -201,6 +231,8 @@
     </div>
   </div>
 </div>
+
+<!-- TAB: REVIEW -->
 <div id="t-review" class="tcontent">
   <div class="card">
     <div class="ctitle">Daily Review</div>
@@ -227,53 +259,24 @@
     <button class="btn danger" id="clearAllBtn">🗑 Clear ALL Entries (this device)</button>
   </div>
 </div>
+
+<!-- TAB: SETTINGS -->
 <div id="t-settings" class="tcontent">
+
   <div class="card">
-    <div class="ctitle">🔗 Shared Client List — Firm-Wide</div>
+    <div class="ctitle">📋 Client List Status</div>
+    <div id="csvStatusBar" class="sbar warn"><div class="sdot"></div><span id="csvStatusText">Loading matters.csv from server…</span></div>
     <p class="small">
-      Set this up once and <strong>every firm user automatically gets the same client list</strong> — no manual imports.
-      Uses <a href="https://jsonbin.io" target="_blank" style="color:var(--brand);">JSONBin.io</a> (free).
-      <a href="#" onclick="toggleHelp();return false;" style="color:var(--brand);">How to set up ▸</a>
+      The client list loads automatically from <span class="mono">matters.csv</span> in the GitHub repo —
+      no setup needed. To update the firm list, replace <span class="mono">matters.csv</span> in GitHub and it will be live for everyone within ~30 seconds.
     </p>
-    <div id="helpBox" class="helpbox">
-      <strong style="font-size:13px;">One-time setup (~3 minutes):</strong>
-      <ol>
-        <li>Go to <a href="https://jsonbin.io" target="_blank" style="color:var(--brand);">jsonbin.io</a> → sign up free</li>
-        <li>Click <strong>API Keys</strong> in the dashboard → copy your <strong>Master Key</strong></li>
-        <li>Paste it below → click <strong>Create New Bin</strong></li>
-        <li>Import your client file below → click <strong>Sync to Shared</strong></li>
-        <li>Share the app URL with colleagues — they get the list automatically!</li>
-      </ol>
-    </div>
-    <div id="syncBar" class="sbar warn" style="display:none;"><div class="sdot"></div><span id="syncBarText"></span></div>
-    <div class="grid two">
-      <div>
-        <label>JSONBin Master Key</label>
-        <input id="jbKey" type="password" placeholder="$2b$10$…" autocomplete="off" />
-      </div>
-      <div>
-        <label>Bin ID <span class="small">(auto-filled after create)</span></label>
-        <input id="jbBin" type="text" placeholder="64abc123…" autocomplete="off" class="mono" />
-      </div>
-    </div>
-    <div class="row" style="margin-top:10px;">
-      <button class="btn sec" onclick="createBin()">🆕 Create Bin</button>
-      <button class="btn sec" onclick="saveJBSettings()">💾 Save Keys</button>
-      <button class="btn ok" onclick="syncUp()">☁️ Sync to Shared</button>
-      <button class="btn sec" onclick="syncDown(true)">⬇️ Fetch Shared</button>
-    </div>
-  </div>
-  <div class="card">
-    <div class="ctitle">📂 Import Client/Matter File</div>
-    <p class="small" style="margin-bottom:10px;">
-      Accepts <strong>.csv</strong>, <strong>.txt</strong>, or <strong>.exp</strong> exports from Tabs3.
-      Required columns: <span class="mono">Client ID</span> (e.g. <span class="mono">11015.0001</span>),
-      <span class="mono">Client Name</span>, <span class="mono">Matter</span>.
-      After import, click <strong>☁️ Sync to Shared</strong> above.
-    </p>
+    <button class="btn sec" onclick="reloadMatters()">🔄 Reload Client List Now</button>
+    <div class="divider"></div>
+    <label>Manual Override <span class="small">(this device only)</span></label>
     <input id="csvFile" type="file" accept=".csv,.txt,.exp,text/csv,text/plain" />
-    <div id="importMsg" class="small" style="margin-top:8px;"></div>
+    <div id="importMsg" class="small" style="margin-top:6px;"></div>
   </div>
+
   <div class="card">
     <div class="ctitle">📤 Export Format</div>
     <div class="grid two">
@@ -291,9 +294,10 @@
       </div>
     </div>
   </div>
+
   <div class="card">
     <div class="ctitle">💾 Backup & Restore</div>
-    <p class="small" style="margin-bottom:10px;">Each user backs up their own entries. The client list is shared via JSONBin.</p>
+    <p class="small" style="margin-bottom:10px;">Each user backs up their own entries on their device.</p>
     <div class="row">
       <button class="btn sec" id="backupBtn">⬇️ Download Backup</button>
       <label class="btn sec" style="display:flex;align-items:center;justify-content:center;cursor:pointer;margin:0;">
@@ -302,8 +306,10 @@
       </label>
     </div>
   </div>
+
 </div>
 </main>
+
 <footer>
   <div class="wrap">
     <button class="btn" id="exportDay">Export Today</button>
@@ -311,9 +317,20 @@
     <button class="btn sec" id="exportRange">Export Range</button>
   </div>
 </footer>
+
 <script>
-const LS={matters:"tabs3_matters_v2",entries:"tabs3_entries_v2",recents:"tabs3_recents_v2",favorites:"tabs3_favorites_v2",settings:"tabs3_settings_v2",user:"tabs3_user_v1",jb:"tabs3_jb_v1",auth:"tabs3_auth_v1"};
-const FIRM_PW="MCWtime";
+/* ── FIRM CONFIG ── */
+const FIRM_PW = "MCWtime";   // ← change password here
+
+/* ── STORAGE KEYS ── */
+const LS = {
+  matters:"tabs3_matters_v3", entries:"tabs3_entries_v3",
+  recents:"tabs3_recents_v3", favorites:"tabs3_favorites_v3",
+  settings:"tabs3_settings_v3", user:"tabs3_user_v1",
+  auth:"tabs3_auth_v1"
+};
+
+/* ── HELPERS ── */
 const $=id=>document.getElementById(id);
 function loadJ(k,fb){try{return JSON.parse(localStorage.getItem(k)||"")??fb;}catch{return fb;}}
 function saveJ(k,v){localStorage.setItem(k,JSON.stringify(v));}
@@ -326,71 +343,347 @@ function monISO(iso){const d=new Date(iso+"T12:00:00");d.setDate(d.getDate()-(d.
 function isoFrom(d){return new Date(d-d.getTimezoneOffset()*60000).toISOString().slice(0,10);}
 function closeModal(id){$(id).classList.add("hidden");}
 function openModal(id){$(id).classList.remove("hidden");}
-let matters=loadJ(LS.matters,[]);
-let entries=loadJ(LS.entries,[]);
-let recents=loadJ(LS.recents,[]);
-let favorites=loadJ(LS.favorites,[]);
-let settings=loadJ(LS.settings,{timekeeper:"70"});
-let user=loadJ(LS.user,null);
-let jb=loadJ(LS.jb,null);
-function submitPW(){if($("pwInput").value===FIRM_PW){saveJ(LS.auth,"ok");closeModal("pwModal");onAuth();}else{$("pwErr").style.display="block";$("pwInput").value="";$("pwInput").focus();}}
+
+/* ── STATE ── */
+let matters   = loadJ(LS.matters,   []);
+let entries   = loadJ(LS.entries,   []);
+let recents   = loadJ(LS.recents,   []);
+let favorites = loadJ(LS.favorites, []);
+let settings  = loadJ(LS.settings,  {timekeeper:"70"});
+let user      = loadJ(LS.user,      null);
+
+/* ── AUTH ── */
+function submitPW(){
+  if($("pwInput").value===FIRM_PW){saveJ(LS.auth,"ok");closeModal("pwModal");onAuth();}
+  else{$("pwErr").style.display="block";$("pwInput").value="";$("pwInput").focus();}
+}
 $("pwInput").addEventListener("keydown",e=>{if(e.key==="Enter")submitPW();});
 function checkAuth(){if(loadJ(LS.auth,null)==="ok"){closeModal("pwModal");onAuth();}}
 function onAuth(){if(!user?.name)openModal("setupModal");else boot();}
-function saveProfile(){const name=($("setupName").value||"").trim();const tk=($("setupTK").value||"").trim()||"70";if(!name){alert("Please enter your name.");return;}user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("setupModal");boot();}
+
+/* ── USER PROFILE ── */
+function saveProfile(){
+  const name=($("setupName").value||"").trim();
+  const tk=($("setupTK").value||"").trim()||"70";
+  if(!name){alert("Please enter your name.");return;}
+  user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("setupModal");boot();
+}
 $("setupTK").addEventListener("keydown",e=>{if(e.key==="Enter")saveProfile();});
 function openEditProfile(){$("editName").value=user?.name||"";$("editTK").value=user?.timekeeper||"70";openModal("editModal");}
-function saveEditProfile(){const name=($("editName").value||"").trim();const tk=($("editTK").value||"").trim()||"70";if(!name){alert("Name required.");return;}user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("editModal");renderHeader();}
+function saveEditProfile(){
+  const name=($("editName").value||"").trim();
+  const tk=($("editTK").value||"").trim()||"70";
+  if(!name){alert("Name required.");return;}
+  user={name,timekeeper:tk};saveJ(LS.user,user);closeModal("editModal");renderHeader();
+}
 function safeTK(){const r=(user?.timekeeper||settings?.timekeeper||"70").toString();const m=r.match(/(\d+)/);return m?m[1]:"70";}
 function renderHeader(){$("pillName").textContent=user?.name||"Set profile";$("pillTK").textContent=safeTK();}
-function showTab(name){document.querySelectorAll(".tcontent").forEach(e=>e.classList.remove("active"));document.querySelectorAll(".tbtn").forEach(e=>e.classList.remove("active"));$("t-"+name).classList.add("active");document.querySelector(`[onclick="showTab('${name}')"]`).classList.add("active");if(name==="review")renderReview();if(name==="settings")renderSettingsUI();}
-function initDates(){const t=todayISO();if(!$("workDate").value||$("workDate").value<t)$("workDate").value=t;if(!$("reviewDate").value)$("reviewDate").value=t;}
+
+/* ── TABS ── */
+function showTab(name){
+  document.querySelectorAll(".tcontent").forEach(e=>e.classList.remove("active"));
+  document.querySelectorAll(".tbtn").forEach(e=>e.classList.remove("active"));
+  $("t-"+name).classList.add("active");
+  document.querySelector(`[onclick="showTab('${name}')"]`).classList.add("active");
+  if(name==="review")renderReview();
+}
+
+/* ── DATES ── */
+function initDates(){
+  const t=todayISO();
+  if(!$("workDate").value||$("workDate").value<t)$("workDate").value=t;
+  if(!$("reviewDate").value)$("reviewDate").value=t;
+}
 setInterval(()=>{const t=todayISO();if($("workDate").value<t)$("workDate").value=t;},60000);
-function score(q,m){if(!q)return 0;const st=norm(`${m.full_id} ${m.client_id||""} ${m.matter_id||""} ${m.client_name||""} ${m.matter_desc||""}`);if(m.full_id?.startsWith(q))return 2000;const cn=norm(m.client_name||""),md=norm(m.matter_desc||"");if(cn.startsWith(q))return 1200;if(md.startsWith(q))return 1100;if(st.includes(q))return 700;let s=0;for(const t of q.split(" ").filter(t=>t.length>=2)){if(m.full_id?.includes(t))s+=120;if(cn.includes(t))s+=90;if(md.includes(t))s+=80;else if(st.includes(t))s+=40;}return s;}
+
+/* ── LOAD MATTERS FROM matters.csv IN REPO ── */
+function parseMattersText(text){
+  const parsed=parseCSV(text);
+  if(!parsed.rows.length)return[];
+  const hdrs=parsed.headers.map(h=>norm(h));
+  const idx=(...ns)=>{for(const n of ns){const i=hdrs.indexOf(norm(n));if(i>=0)return i;}return -1;};
+  const idI=idx("client id","clientid","id","tabs3 id","clientmatterid","client/matter id","clientmatter");
+  const cnI=idx("client name","client","clientname","name");
+  const mdI=idx("matter","matter description","matterdesc","description","matter desc");
+  if(idI<0)return[];
+  const out=[];
+  for(const r of parsed.rows){
+    const full_id=(r[idI]||"").trim();
+    if(!full_id||!full_id.includes("."))continue;
+    const[client_id,matter_id]=full_id.split(".");
+    const client_name=cnI>=0?(r[cnI]||"").trim():"";
+    const matter_desc=mdI>=0?(r[mdI]||"").trim():"";
+    out.push({full_id,client_id,matter_id,client_name,matter_desc,
+              search_text:norm(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`)});
+  }
+  return out;
+}
+
+async function loadMattersFromRepo(){
+  try{
+    const res=await fetch("./matters.csv",{cache:"no-store"});
+    if(!res.ok)throw new Error("not found");
+    const text=await res.text();
+    const nm=parseMattersText(text);
+    if(!nm.length)throw new Error("no valid rows");
+    matters=nm;saveJ(LS.matters,matters);
+    setCsvStatus("ok",`✅ ${matters.length} client/matter records loaded from matters.csv`);
+    return true;
+  }catch(e){
+    if(matters.length){
+      setCsvStatus("warn",`Using cached list (${matters.length} records). Could not fetch latest matters.csv.`);
+    }else{
+      setCsvStatus("err","Could not load matters.csv — add it to your GitHub repo root.");
+    }
+    return false;
+  }
+}
+
+async function reloadMatters(){
+  setCsvStatus("warn","Reloading…");
+  await loadMattersFromRepo();
+  renderRF();updateListBar();
+}
+
+function setCsvStatus(t,msg){
+  const bar=$("csvStatusBar");
+  bar.className=`sbar ${t}`;
+  $("csvStatusText").textContent=msg;
+}
+
+/* ── SEARCH ── */
+function score(q,m){
+  if(!q)return 0;
+  const st=norm(`${m.full_id} ${m.client_id||""} ${m.matter_id||""} ${m.client_name||""} ${m.matter_desc||""}`);
+  if(m.full_id?.startsWith(q))return 2000;
+  const cn=norm(m.client_name||""),md=norm(m.matter_desc||"");
+  if(cn.startsWith(q))return 1200;
+  if(md.startsWith(q))return 1100;
+  if(st.includes(q))return 700;
+  let s=0;
+  for(const t of q.split(" ").filter(t=>t.length>=2)){
+    if(m.full_id?.includes(t))s+=120;
+    if(cn.includes(t))s+=90;
+    if(md.includes(t))s+=80;
+    else if(st.includes(t))s+=40;
+  }
+  return s;
+}
 let dbt=null;
 $("mSearch").addEventListener("input",()=>{clearTimeout(dbt);dbt=setTimeout(runSearch,100);});
-function runSearch(){const q=norm($("mSearch").value),dd=$("dd");if(!q||!matters.length){dd.style.display="none";return;}const hits=matters.map(m=>({m,s:score(q,m)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,8);if(!hits.length){dd.style.display="none";return;}dd.innerHTML=hits.map(({m})=>`<div class="opt" onclick="pickM('${esc(m.full_id)}')" ontouchend="pickM('${esc(m.full_id)}')"><div class="otop mono">${esc(m.full_id)}</div><div class="omid">${esc(m.client_name)}</div><div class="obot">${esc(m.matter_desc)}</div></div>`).join("");dd.style.display="block";}
+function runSearch(){
+  const q=norm($("mSearch").value),dd=$("dd");
+  if(!q||!matters.length){dd.style.display="none";return;}
+  const hits=matters.map(m=>({m,s:score(q,m)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,10);
+  if(!hits.length){dd.style.display="none";return;}
+  dd.innerHTML=hits.map(({m})=>`
+    <div class="opt" onclick="pickM('${esc(m.full_id)}')" ontouchend="pickM('${esc(m.full_id)}')">
+      <div class="otop">${esc(m.client_name||"—")}</div>
+      <div class="omid">${esc(m.matter_desc||"—")}</div>
+      <div class="obot mono">${esc(m.full_id)}</div>
+    </div>`).join("");
+  dd.style.display="block";
+}
 function pickM(id){const m=matters.find(x=>x.full_id===id);if(m){selM(m);$("dd").style.display="none";$("mSearch").value="";}}
-function selM(m){$("selId").value=m.full_id;$("selLine").textContent=`${m.full_id} · ${m.client_name} — ${m.matter_desc}`;recents=[m.full_id,...recents.filter(x=>x!==m.full_id)].slice(0,20);saveJ(LS.recents,recents);renderRF();}
+function selM(m){
+  $("selId").value=m.full_id;
+  $("selLine").textContent=`${m.full_id} · ${m.client_name} — ${m.matter_desc}`;
+  recents=[m.full_id,...recents.filter(x=>x!==m.full_id)].slice(0,20);
+  saveJ(LS.recents,recents);renderRF();
+}
 function idLabel(id){const m=matters.find(x=>x.full_id===id);return m?`${id} · ${m.client_name} — ${m.matter_desc}`:id;}
 document.addEventListener("click",e=>{if(!e.target.closest(".swrap"))$("dd").style.display="none";});
-function renderRF(){const rs=$("recents"),fs=$("favorites");rs.innerHTML="";fs.innerHTML="";const ro=new Option(matters.length?"Select a recent…":"Import matters first","");rs.appendChild(ro);recents.forEach(id=>{rs.appendChild(new Option(idLabel(id),id));});const fo=new Option(favorites.length?"Select a favorite…":"No favorites yet","");fs.appendChild(fo);favorites.forEach(id=>{fs.appendChild(new Option(idLabel(id),id));});}
+
+/* ── RECENTS / FAVORITES ── */
+function renderRF(){
+  const rs=$("recents"),fs=$("favorites");
+  rs.innerHTML="";fs.innerHTML="";
+  rs.appendChild(new Option(matters.length?"Select a recent…":"Loading…",""));
+  recents.forEach(id=>rs.appendChild(new Option(idLabel(id),id)));
+  fs.appendChild(new Option(favorites.length?"Select a favorite…":"No favorites yet",""));
+  favorites.forEach(id=>fs.appendChild(new Option(idLabel(id),id)));
+}
 $("recents").addEventListener("change",function(){const m=matters.find(x=>x.full_id===this.value);if(m){selM(m);this.value="";}});
 $("favorites").addEventListener("change",function(){const m=matters.find(x=>x.full_id===this.value);if(m){selM(m);this.value="";}});
-$("addFavBtn").addEventListener("click",()=>{const id=$("selId").value;if(!id)return alert("Select a matter first.");favorites=[id,...favorites.filter(x=>x!==id)].slice(0,40);saveJ(LS.favorites,favorites);renderRF();});
+$("addFavBtn").addEventListener("click",()=>{
+  const id=$("selId").value;if(!id)return alert("Select a matter first.");
+  favorites=[id,...favorites.filter(x=>x!==id)].slice(0,40);saveJ(LS.favorites,favorites);renderRF();
+});
 $("clearSelBtn").addEventListener("click",()=>{$("selId").value="";$("selLine").textContent="None";});
 $("focusDescBtn").addEventListener("click",()=>{$("desc").focus();$("desc").scrollIntoView({behavior:"smooth",block:"center"});});
+
+/* ── ENTRIES ── */
 function addH(n){$("hours").value=(Math.round((Number($("hours").value||0)+n)*10)/10).toFixed(1);}
-function mkEntry(date,matterId,desc,hrs){const m=matters.find(x=>x.full_id===matterId);entries.unshift({id:uid(),date,timekeeper:safeTK(),user_name:user?.name||"",matter_full_id:matterId,client_name:m?.client_name||"",matter_desc:m?.matter_desc||"",hours:Number(hrs),description:(desc||"").trim(),created_at:Date.now()});}
-$("addBtn").addEventListener("click",()=>{const id=$("selId").value,d=($("desc").value||"").trim(),h=$("hours").value,dt=$("workDate").value||todayISO();if(!id)return alert("Select a Client/Matter first.");if(!d)return alert("Add a description.");if(!h||Number(h)<=0)return alert("Enter valid hours (e.g. 0.3).");mkEntry(dt,id,d,h);saveJ(LS.entries,entries);$("desc").value="";$("hours").value="";$("desc").focus();renderPills();});
-$("dupBtn").addEventListener("click",()=>{const t=todayISO(),y=isoFrom(new Date(new Date(t+"T12:00:00").getTime()-86400000));const ye=entries.filter(e=>e.date===y);if(!ye.length)return alert("No entries for yesterday.");if(!confirm(`Duplicate ${ye.length} entries from ${y} to today?`))return;[...ye].sort((a,b)=>(a.created_at||0)-(b.created_at||0)).forEach(e=>mkEntry(t,e.matter_full_id,e.description,e.hours));saveJ(LS.entries,entries);$("workDate").value=t;renderPills();});
+function mkEntry(date,matterId,desc,hrs){
+  const m=matters.find(x=>x.full_id===matterId);
+  entries.unshift({id:uid(),date,timekeeper:safeTK(),user_name:user?.name||"",
+    matter_full_id:matterId,client_name:m?.client_name||"",matter_desc:m?.matter_desc||"",
+    hours:Number(hrs),description:(desc||"").trim(),created_at:Date.now()});
+}
+$("addBtn").addEventListener("click",()=>{
+  const id=$("selId").value,d=($("desc").value||"").trim(),h=$("hours").value,dt=$("workDate").value||todayISO();
+  if(!id)return alert("Select a Client/Matter first.");
+  if(!d)return alert("Add a description.");
+  if(!h||Number(h)<=0)return alert("Enter valid hours (e.g. 0.3).");
+  mkEntry(dt,id,d,h);saveJ(LS.entries,entries);
+  $("desc").value="";$("hours").value="";$("desc").focus();renderPills();
+});
+$("dupBtn").addEventListener("click",()=>{
+  const t=todayISO(),y=isoFrom(new Date(new Date(t+"T12:00:00").getTime()-86400000));
+  const ye=entries.filter(e=>e.date===y);
+  if(!ye.length)return alert("No entries for yesterday.");
+  if(!confirm(`Duplicate ${ye.length} entries from ${y} to today?`))return;
+  [...ye].sort((a,b)=>(a.created_at||0)-(b.created_at||0)).forEach(e=>mkEntry(t,e.matter_full_id,e.description,e.hours));
+  saveJ(LS.entries,entries);$("workDate").value=t;renderPills();
+});
 window.delEntry=function(id){if(!confirm("Delete this entry?"))return;entries=entries.filter(e=>e.id!==id);saveJ(LS.entries,entries);renderReview();renderPills();};
-window.editEntry=function(id){const e=entries.find(x=>x.id===id);if(!e)return;const nd=prompt("Edit description:",e.description);if(nd===null)return;const nh=prompt("Edit hours:",String(e.hours));if(nh===null)return;const h=Number(nh);if(!nd.trim())return alert("Description required.");if(!h||isNaN(h)||h<=0)return alert("Hours must be > 0.");e.description=nd.trim();e.hours=h;saveJ(LS.entries,entries);renderReview();renderPills();};
+window.editEntry=function(id){
+  const e=entries.find(x=>x.id===id);if(!e)return;
+  const nd=prompt("Edit description:",e.description);if(nd===null)return;
+  const nh=prompt("Edit hours:",String(e.hours));if(nh===null)return;
+  const h=Number(nh);
+  if(!nd.trim())return alert("Description required.");
+  if(!h||isNaN(h)||h<=0)return alert("Hours must be > 0.");
+  e.description=nd.trim();e.hours=h;saveJ(LS.entries,entries);renderReview();renderPills();
+};
+
+/* ── REVIEW ── */
 $("reviewDate").addEventListener("change",()=>{renderReview();renderPills();});
-function renderReview(){const dt=$("reviewDate").value||todayISO(),list=entries.filter(e=>e.date===dt);let tot=0;list.forEach(e=>tot+=Number(e.hours||0));$("totalHours").value=tot.toFixed(1);$("totalEntries").textContent=list.length;const mon=monISO(dt),sun=isoFrom(new Date(new Date(mon+"T12:00:00").getTime()+6*86400000));$("weekRange").textContent=`${mon} → ${sun}`;let wt=0;entries.filter(e=>e.date>=mon&&e.date<=sun).forEach(e=>wt+=Number(e.hours||0));$("weekHours").value=wt.toFixed(1);const el=$("entriesList");if(!list.length){el.innerHTML=`<div class="small" style="text-align:center;padding:20px;">No entries for ${esc(dt)}.</div>`;return;}el.innerHTML="";for(const e of list){const d=document.createElement("div");d.className="entry";d.innerHTML=`<div class="emeta"><div class="badges"><span class="badge mono"><b>${esc(e.matter_full_id)}</b></span><span class="badge">${Number(e.hours).toFixed(1)} hrs</span><span class="badge">TK ${esc(e.timekeeper||safeTK())}</span>${e.user_name?`<span class="badge ubadge">👤 ${esc(e.user_name)}</span>`:""}</div><div class="small">${esc(e.client_name)} — ${esc(e.matter_desc)}</div></div><div class="edesc">${esc(e.description)}</div><div class="eactions"><button class="btn sec" onclick="editEntry('${e.id}')">✏️ Edit</button><button class="btn danger" onclick="delEntry('${e.id}')">🗑 Delete</button></div>`;el.appendChild(d);}}
-function renderPills(){const t=todayISO(),list=entries.filter(e=>e.date===t);let tot=0;list.forEach(e=>tot+=Number(e.hours||0));$("pillCount").textContent=`${list.length} today`;$("pillHours").textContent=`${tot.toFixed(1)} hrs`;}
-$("clearAllBtn").addEventListener("click",()=>{if(!confirm("Clear ALL entries on this device? Back up first!"))return;entries=[];saveJ(LS.entries,entries);renderReview();renderPills();});
-function updateListBar(){const bar=$("listBar"),txt=$("listBarText");bar.style.display="flex";if(!matters.length){bar.className="sbar warn";txt.textContent="No client list loaded — import one in Settings.";}else{bar.className="sbar ok";txt.textContent=`${matters.length} client/matter records loaded.`;}}
-const JB="https://api.jsonbin.io/v3";
-function jbHdr(k){return{"Content-Type":"application/json","X-Master-Key":k};}
-async function createBin(){const k=($("jbKey").value||"").trim();if(!k)return alert("Paste your JSONBin Master Key first.");try{setSyncBar("warn","Creating bin…");const r=await fetch(`${JB}/b`,{method:"POST",headers:{...jbHdr(k),"X-Bin-Name":"Tabs3-Matters","X-Bin-Private":"true"},body:JSON.stringify({matters:[],created:new Date().toISOString()})});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);const binId=d.metadata?.id;$("jbBin").value=binId;jb={apiKey:k,binId};saveJ(LS.jb,jb);setSyncBar("ok",`✅ Bin created! ID: ${binId} — Now import file and click Sync.`);}catch(e){setSyncBar("err","Error: "+e.message);}}
-async function saveJBSettings(){const k=($("jbKey").value||"").trim(),b=($("jbBin").value||"").trim();if(!k||!b)return alert("Enter both Master Key and Bin ID.");jb={apiKey:k,binId:b};saveJ(LS.jb,jb);setSyncBar("ok","Keys saved. Fetching shared list…");await syncDown(true);}
-async function syncUp(){if(!jb?.apiKey||!jb?.binId)return alert("Configure JSONBin first (Settings tab).");if(!matters.length)return alert("Import a file first — nothing to sync.");try{setSyncBar("warn","Syncing…");const r=await fetch(`${JB}/b/${jb.binId}`,{method:"PUT",headers:jbHdr(jb.apiKey),body:JSON.stringify({matters,synced:new Date().toISOString()})});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);setSyncBar("ok",`✅ Synced ${matters.length} records. All users will get this on next load.`);}catch(e){setSyncBar("err","Sync failed: "+e.message);}}
-async function syncDown(manual=false){if(!jb?.apiKey||!jb?.binId){if(manual)setSyncBar("warn","JSONBin not configured yet.");return;}try{if(manual)setSyncBar("warn","Fetching…");const r=await fetch(`${JB}/b/${jb.binId}/latest`,{headers:{"X-Master-Key":jb.apiKey}});const d=await r.json();if(!r.ok)throw new Error(d?.message||r.status);const fetched=d.record?.matters;if(!Array.isArray(fetched)||!fetched.length){if(manual)setSyncBar("warn","Bin empty — import file and sync first.");return;}matters=fetched;saveJ(LS.matters,matters);renderRF();updateListBar();setSyncBar("ok",`✅ ${matters.length} records loaded from shared list.`);}catch(e){if(manual)setSyncBar("err","Fetch failed: "+e.message);}}
-function setSyncBar(t,msg){const bar=$("syncBar");bar.style.display="flex";bar.className=`sbar ${t}`;$("syncBarText").textContent=msg;}
-function toggleHelp(){const h=$("helpBox");h.style.display=h.style.display==="none"?"block":"none";}
-function renderSettingsUI(){if(jb?.apiKey)$("jbKey").value=jb.apiKey;if(jb?.binId)$("jbBin").value=jb.binId;setSyncBar(jb?.apiKey?"ok":"warn",jb?.apiKey?`Connected · Bin: ${jb.binId}`:"Not configured — set up JSONBin to share firm-wide.");}
-$("csvFile").addEventListener("change",async function(){const file=this.files?.[0];if(!file)return;const text=await file.text(),parsed=parseCSV(text);if(!parsed.rows.length)return alert("Could not read file.");const hdrs=parsed.headers.map(h=>norm(h));const idx=(...ns)=>{for(const n of ns){const i=hdrs.indexOf(norm(n));if(i>=0)return i;}return -1;};const idI=idx("client id","clientid","id","matter id","matterid","tabs3 id","clientmatterid");const cnI=idx("client name","client","clientname","name");const mdI=idx("matter","matter description","matterdesc","description","matter desc");if(idI<0)return alert('File must have a "Client ID" column like 11015.0001.');const nm=[];for(const r of parsed.rows){const full_id=(r[idI]||"").trim();if(!full_id||!full_id.includes("."))continue;const[client_id,matter_id]=full_id.split(".");const client_name=cnI>=0?(r[cnI]||"").trim():"";const matter_desc=mdI>=0?(r[mdI]||"").trim():"";nm.push({full_id,client_id,matter_id,client_name,matter_desc,search_text:norm(`${full_id} ${client_id} ${matter_id} ${client_name} ${matter_desc}`)});}if(!nm.length)return alert("No valid rows found.\n\nMake sure your file has a 'Client ID' column with IDs in the format 11015.0001 (with a dot separating client and matter numbers).");matters=nm;saveJ(LS.matters,matters);renderRF();updateListBar();$("importMsg").innerHTML=`<span style="color:var(--success);">✅ Imported ${matters.length} matters from ${file.name}.</span> Now click <strong>☁️ Sync to Shared</strong> above.`;this.value="";});
-function hdr(p){if(p==="tabs3like")return"Date,Timekeeper,ClientMatterID,Hours,Narrative";if(p==="simple")return"Date,Timekeeper,Matter,Hours,Description";return($("customHeader").value||"").trim()||"Date,Timekeeper,Matter,Hours,Description";}
-function doExport(list,fname){if(!list.length)return alert("No entries to export.");let csv=hdr($("exportPreset").value)+"\n";for(const e of list)csv+=[e.date,e.timekeeper||safeTK(),e.matter_full_id,Number(e.hours).toFixed(1),csvQ(e.description)].join(",")+"\n";const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);}
+function renderReview(){
+  const dt=$("reviewDate").value||todayISO(),list=entries.filter(e=>e.date===dt);
+  let tot=0;list.forEach(e=>tot+=Number(e.hours||0));
+  $("totalHours").value=tot.toFixed(1);$("totalEntries").textContent=list.length;
+  const mon=monISO(dt),sun=isoFrom(new Date(new Date(mon+"T12:00:00").getTime()+6*86400000));
+  $("weekRange").textContent=`${mon} → ${sun}`;
+  let wt=0;entries.filter(e=>e.date>=mon&&e.date<=sun).forEach(e=>wt+=Number(e.hours||0));
+  $("weekHours").value=wt.toFixed(1);
+  const el=$("entriesList");
+  if(!list.length){el.innerHTML=`<div class="small" style="text-align:center;padding:20px;">No entries for ${esc(dt)}.</div>`;return;}
+  el.innerHTML="";
+  for(const e of list){
+    const d=document.createElement("div");d.className="entry";
+    d.innerHTML=`
+      <div class="emeta">
+        <div class="badges">
+          <span class="badge mono"><b>${esc(e.matter_full_id)}</b></span>
+          <span class="badge">${Number(e.hours).toFixed(1)} hrs</span>
+          <span class="badge">TK ${esc(e.timekeeper||safeTK())}</span>
+          ${e.user_name?`<span class="badge ubadge">👤 ${esc(e.user_name)}</span>`:""}
+        </div>
+        <div class="small">${esc(e.client_name)} — ${esc(e.matter_desc)}</div>
+      </div>
+      <div class="edesc">${esc(e.description)}</div>
+      <div class="eactions">
+        <button class="btn sec" onclick="editEntry('${e.id}')">✏️ Edit</button>
+        <button class="btn danger" onclick="delEntry('${e.id}')">🗑 Delete</button>
+      </div>`;
+    el.appendChild(d);
+  }
+}
+function renderPills(){
+  const t=todayISO(),list=entries.filter(e=>e.date===t);
+  let tot=0;list.forEach(e=>tot+=Number(e.hours||0));
+  $("pillCount").textContent=`${list.length} today`;$("pillHours").textContent=`${tot.toFixed(1)} hrs`;
+}
+$("clearAllBtn").addEventListener("click",()=>{
+  if(!confirm("Clear ALL entries on this device? Back up first!"))return;
+  entries=[];saveJ(LS.entries,entries);renderReview();renderPills();
+});
+
+/* ── MATTER STATUS (entry tab) ── */
+function updateListBar(){
+  const bar=$("listBar"),txt=$("listBarText");bar.style.display="flex";
+  if(!matters.length){bar.className="sbar warn";txt.textContent="No client list loaded — check Settings.";}
+  else{bar.className="sbar ok";txt.textContent=`${matters.length} client/matter records loaded.`;}
+}
+
+/* ── MANUAL CSV OVERRIDE ── */
+$("csvFile").addEventListener("change",async function(){
+  const file=this.files?.[0];if(!file)return;
+  const text=await file.text();
+  const nm=parseMattersText(text);
+  if(!nm.length)return alert("No valid rows found. Check that Client ID column has IDs like 11015.0001.");
+  matters=nm;saveJ(LS.matters,matters);renderRF();updateListBar();
+  $("importMsg").innerHTML=`<span style="color:var(--success);">✅ Imported ${matters.length} matters from ${esc(file.name)} (this device only).</span>`;
+  this.value="";
+});
+
+/* ── EXPORT ── */
+function hdr(p){
+  if(p==="tabs3like")return"Date,Timekeeper,ClientMatterID,Hours,Narrative";
+  if(p==="simple")return"Date,Timekeeper,Matter,Hours,Description";
+  return($("customHeader").value||"").trim()||"Date,Timekeeper,Matter,Hours,Description";
+}
+function doExport(list,fname){
+  if(!list.length)return alert("No entries to export.");
+  let csv=hdr($("exportPreset").value)+"\n";
+  for(const e of list)csv+=[e.date,e.timekeeper||safeTK(),e.matter_full_id,Number(e.hours).toFixed(1),csvQ(e.description)].join(",")+"\n";
+  const blob=new Blob([csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=fname;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+}
 $("exportDay").addEventListener("click",()=>doExport(entries.filter(e=>e.date===todayISO()),`tabs3_${todayISO()}.csv`));
 $("exportReview").addEventListener("click",()=>{const dt=$("reviewDate").value||todayISO();doExport(entries.filter(e=>e.date===dt),`tabs3_${dt}.csv`);});
-$("exportRange").addEventListener("click",()=>{const s=prompt("Start date (YYYY-MM-DD):",todayISO());if(!s)return;const e=prompt("End date (YYYY-MM-DD):",todayISO());if(!e)return;doExport(entries.filter(x=>x.date>=s&&x.date<=e),`tabs3_${s}_to_${e}.csv`);});
-$("backupBtn").addEventListener("click",()=>{const p={version:3,exported_at:new Date().toISOString(),user,matters,entries,recents,favorites,settings};const blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=`tabs3_${(user?.name||"user").replace(/\s/g,"_")}_${todayISO()}.json`;document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);});
-$("restoreFile").addEventListener("change",async function(){const file=this.files?.[0];if(!file)return;try{const obj=JSON.parse(await file.text());if(!confirm("Restore will overwrite your data. Continue?"))return;if(Array.isArray(obj.matters)){matters=obj.matters;saveJ(LS.matters,matters);}if(Array.isArray(obj.entries)){entries=obj.entries;saveJ(LS.entries,entries);}if(Array.isArray(obj.recents)){recents=obj.recents;saveJ(LS.recents,recents);}if(Array.isArray(obj.favorites)){favorites=obj.favorites;saveJ(LS.favorites,favorites);}if(obj.settings){settings=obj.settings;saveJ(LS.settings,settings);}if(obj.user){user=obj.user;saveJ(LS.user,user);renderHeader();}renderRF();renderReview();renderPills();updateListBar();alert("Restore complete.");}catch{alert("Could not restore file.");}finally{this.value="";}});
-function parseCSV(text){const firstLine=text.split('\n')[0]||"";const delim=(firstLine.split('\t').length>firstLine.split(',').length)?'\t':',';const rows=[];let cur=[],val="",inQ=false;for(let i=0;i<text.length;i++){const c=text[i],nx=text[i+1];if(inQ){if(c==='"'&&nx==='"'){val+='"';i++;}else if(c==='"')inQ=false;else val+=c;}else{if(c==='"')inQ=true;else if(c===delim){cur.push(val);val="";}else if(c==='\n'){cur.push(val);rows.push(cur);cur=[];val="";}else if(c!=='\r')val+=c;}}cur.push(val);if(cur.length>1||cur[0].trim())rows.push(cur);const headers=(rows.shift()||[]).map(h=>(h||"").trim());return{headers,rows};}
-function boot(){initDates();renderHeader();renderRF();renderReview();renderPills();updateListBar();$("customHeader").value="Date,Timekeeper,Matter,Hours,Description";syncDown(false);}
+$("exportRange").addEventListener("click",()=>{
+  const s=prompt("Start date (YYYY-MM-DD):",todayISO());if(!s)return;
+  const e=prompt("End date (YYYY-MM-DD):",todayISO());if(!e)return;
+  doExport(entries.filter(x=>x.date>=s&&x.date<=e),`tabs3_${s}_to_${e}.csv`);
+});
+
+/* ── BACKUP / RESTORE ── */
+$("backupBtn").addEventListener("click",()=>{
+  const p={version:3,exported_at:new Date().toISOString(),user,matters,entries,recents,favorites,settings};
+  const blob=new Blob([JSON.stringify(p,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download=`tabs3_${(user?.name||"user").replace(/\s/g,"_")}_${todayISO()}.json`;
+  document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+});
+$("restoreFile").addEventListener("change",async function(){
+  const file=this.files?.[0];if(!file)return;
+  try{
+    const obj=JSON.parse(await file.text());
+    if(!confirm("Restore will overwrite your data. Continue?"))return;
+    if(Array.isArray(obj.matters)){matters=obj.matters;saveJ(LS.matters,matters);}
+    if(Array.isArray(obj.entries)){entries=obj.entries;saveJ(LS.entries,entries);}
+    if(Array.isArray(obj.recents)){recents=obj.recents;saveJ(LS.recents,recents);}
+    if(Array.isArray(obj.favorites)){favorites=obj.favorites;saveJ(LS.favorites,favorites);}
+    if(obj.settings){settings=obj.settings;saveJ(LS.settings,settings);}
+    if(obj.user){user=obj.user;saveJ(LS.user,user);renderHeader();}
+    renderRF();renderReview();renderPills();updateListBar();alert("Restore complete.");
+  }catch{alert("Could not restore file.");}
+  finally{this.value="";}
+});
+
+/* ── CSV PARSER (auto-detects comma or tab) ── */
+function parseCSV(text){
+  const firstLine=text.split("\n")[0]||"";
+  const delim=(firstLine.split("\t").length>firstLine.split(",").length)?"\t":",";
+  const rows=[];let cur=[],val="",inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i],nx=text[i+1];
+    if(inQ){if(c==='"'&&nx==='"'){val+='"';i++;}else if(c==='"')inQ=false;else val+=c;}
+    else{if(c==='"')inQ=true;else if(c===delim){cur.push(val);val="";}else if(c==="\n"){cur.push(val);rows.push(cur);cur=[];val="";}else if(c!=="\r")val+=c;}
+  }
+  cur.push(val);if(cur.length>1||cur[0].trim())rows.push(cur);
+  const headers=(rows.shift()||[]).map(h=>(h||"").trim());
+  return{headers,rows};
+}
+
+/* ── BOOT ── */
+async function boot(){
+  initDates();renderHeader();
+
+  // URL param: ?tk=71 lets you set TK via a link
+  const tkParam=new URLSearchParams(location.search).get("tk");
+  if(tkParam&&/^\d+$/.test(tkParam)){user={...user,timekeeper:tkParam};saveJ(LS.user,user);renderHeader();}
+
+  await loadMattersFromRepo();
+  renderRF();updateListBar();renderReview();renderPills();
+  $("customHeader").value="Date,Timekeeper,Matter,Hours,Description";
+}
+
 checkAuth();
 </script>
 </body>
 </html>
+
